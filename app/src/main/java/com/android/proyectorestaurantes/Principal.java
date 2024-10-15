@@ -1,10 +1,17 @@
 package com.android.proyectorestaurantes;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.MenuItem;
 
+import com.android.proyectorestaurantes.ui.principal.PrincipalFragment;
 import com.google.android.material.navigation.NavigationView;
 
+import androidx.activity.OnBackPressedCallback;
+import androidx.activity.OnBackPressedDispatcher;
+import androidx.annotation.NonNull;
+import androidx.core.view.GravityCompat;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -29,16 +36,18 @@ public class Principal extends AppCompatActivity {
         setSupportActionBar(binding.appBarPrincipal.toolbar);
         DrawerLayout drawer = binding.drawerLayout;
         NavigationView navigationView = binding.navView;
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
-        mAppBarConfiguration = new AppBarConfiguration.Builder(R.id.nav_principal,
-                R.id.nav_perfil, R.id.nav_mapa, R.id.nav_ajustes)
+
+        // Configurar el AppBarConfiguration con las IDs de los destinos principales
+        mAppBarConfiguration = new AppBarConfiguration.Builder(
+                R.id.nav_principal, R.id.nav_perfil, R.id.nav_mapa, R.id.nav_ajustes)
                 .setOpenableLayout(drawer)
                 .build();
+
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_principal);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -53,4 +62,7 @@ public class Principal extends AppCompatActivity {
         return NavigationUI.navigateUp(navController, mAppBarConfiguration)
                 || super.onSupportNavigateUp();
     }
+
+
+
 }
