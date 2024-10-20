@@ -12,4 +12,5 @@
     <string name="menu_mapa">Mapa</string>
     <string name="menu_Ajustes">Ajustes</string>
     <string name="menu_principal">Pagina principal</string>
+    <string name="menu_Favoritos">Favoritos</string>
 </resources>

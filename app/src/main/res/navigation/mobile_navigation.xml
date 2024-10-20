@@ -27,4 +27,9 @@
         android:name="com.android.proyectorestaurantes.ui.principal.PrincipalFragment"
         android:label="@string/menu_principal"
         tools:layout="@layout/fragment_principal" />
+    <fragment
+        android:id="@+id/nav_favoritos"
+        android:name="com.android.proyectorestaurantes.ui.favoritos.FavoritosFragment"
+        android:label="@string/menu_Favoritos"
+        tools:layout="@layout/fragment_favoritos" />
 </navigation>
