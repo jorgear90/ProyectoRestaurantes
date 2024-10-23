@@ -1,8 +1,9 @@
 package com.android.proyectorestaurantes.entidades;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class Restaurante {
+public class Restaurante implements Serializable {
     private String nombre;
     private String direccion;
     private String horaApertura;
@@ -55,13 +56,7 @@ public class Restaurante {
         this.horaCierre = horaCierre;
     }
 
-    public double getLatitud() {
-        return latitud;
-    }
 
-    public void setLatitud(double latitud) {
-        this.latitud = latitud;
-    }
 
     public double getLongitud() {
         return longitud;
@@ -85,5 +80,13 @@ public class Restaurante {
 
     public void setPlatillos(List<Platillo> platillos) {
         this.platillos = platillos;
+    }
+
+    public double getLatitud() {
+        return latitud;
+    }
+
+    public void setLatitud(double latitud) {
+        this.latitud = latitud;
     }
 }

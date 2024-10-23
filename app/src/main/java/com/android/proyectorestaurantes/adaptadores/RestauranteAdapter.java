@@ -1,6 +1,5 @@
 package com.android.proyectorestaurantes.adaptadores;
 
-import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,10 +23,25 @@ public class RestauranteAdapter extends RecyclerView.Adapter<RestauranteAdapter.
     ArrayList<Restaurante> listaOriginal;
 
     public RestauranteAdapter(ArrayList<Restaurante> restaurantes) {
-        //this.context = context;
         this.restaurantes = restaurantes;
         listaOriginal = new ArrayList<>();
         listaOriginal.addAll(restaurantes);
+    }
+
+    public ArrayList<Restaurante> getListaOriginal() {
+        return listaOriginal;
+    }
+
+    // Método para setear (actualizar) la lista de restaurantes
+    public void setRestaurantes(ArrayList<Restaurante> nuevosRestaurantes) {
+        this.restaurantes.clear();
+        this.restaurantes.addAll(nuevosRestaurantes);
+
+        // Actualiza también la lista original
+        this.listaOriginal.clear();
+        this.listaOriginal.addAll(nuevosRestaurantes);
+
+        notifyDataSetChanged();  // Notifica al adaptador que los datos han cambiado y debe refrescar la vista
     }
 
     //HECHO
@@ -41,7 +55,8 @@ public class RestauranteAdapter extends RecyclerView.Adapter<RestauranteAdapter.
         return new RestauranteViewHolder(view);
     }
 
-    public void filtrado(String txtBuscar){
+    public ArrayList<Restaurante> filtrado(String txtBuscar){
+        ArrayList<Restaurante> restaurantesFiltrados = new ArrayList<>();
         int longitud = txtBuscar.length();
         if(longitud==0){
             Log.e("resultado","chaoooo");
@@ -52,8 +67,10 @@ public class RestauranteAdapter extends RecyclerView.Adapter<RestauranteAdapter.
             List<Restaurante> collecion = restaurantes.stream().filter(i -> i.getNombre().toLowerCase().contains(txtBuscar.toLowerCase())).collect(Collectors.toList());
             restaurantes.clear();
             restaurantes.addAll(collecion);
+            restaurantesFiltrados.addAll(collecion);
         }
         notifyDataSetChanged();
+        return restaurantesFiltrados;
     }
 
     @Override

@@ -8,12 +8,33 @@
     android:fitsSystemWindows="true"
     tools:openDrawer="start">
 
-    <include
-        android:id="@+id/app_bar_principal"
-        layout="@layout/app_bar_principal"
+    <!-- Contenedor principal -->
+    <LinearLayout
+        android:id="@+id/contenedor"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
+        <!-- Barra de herramientas, etc. -->
+        <include
+            android:id="@+id/app_bar_principal"
+            layout="@layout/app_bar_principal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <!-- Contenedor de los Fragmentos -->
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/nav_host_fragment"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            app:navGraph="@navigation/mobile_navigation"
+            app:defaultNavHost="true"
+            android:name="androidx.navigation.fragment.NavHostFragment" />
+
+    </LinearLayout>
+
+    <!-- Navigation Drawer -->
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/nav_view"
         android:layout_width="wrap_content"
@@ -22,6 +43,5 @@
         android:fitsSystemWindows="true"
         app:headerLayout="@layout/nav_header_principal"
         app:menu="@menu/activity_main_drawer" />
-
 
 </androidx.drawerlayout.widget.DrawerLayout>

@@ -24,5 +24,6 @@
             android:id="@+id/nav_favoritos"
             android:icon="@android:drawable/btn_star_big_off"
             android:title="@string/menu_Favoritos" />
+
     </group>
 </menu>

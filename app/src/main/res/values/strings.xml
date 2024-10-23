@@ -13,4 +13,5 @@
     <string name="menu_Ajustes">Ajustes</string>
     <string name="menu_principal">Pagina principal</string>
     <string name="menu_Favoritos">Favoritos</string>
+    <string name="menu_holaMundo">Hola Mundo</string>
 </resources>

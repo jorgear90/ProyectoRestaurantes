@@ -1,0 +1,20 @@
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/nav_principal">
+
+    <fragment
+        android:id="@+id/nav_principal"
+        android:name="com.android.proyectorestaurantes.ui.principal.PrincipalFragment"
+        android:label="Pagina principal">
+        <!-- Acción para navegar al mapa -->
+        <action
+            android:id="@+id/action_nav_principal_to_fragmentMapa"
+            app:destination="@id/fragmentMapa" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/fragmentMapa"
+        android:name="com.android.proyectorestaurantes.ui.mapa.MapaFragment"
+        android:label="Mapa" />
+</navigation>
