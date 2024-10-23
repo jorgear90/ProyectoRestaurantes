@@ -1,5 +1,6 @@
 package com.android.proyectorestaurantes.ui.mapa;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,6 +15,7 @@ import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.android.proyectorestaurantes.R;
+import com.android.proyectorestaurantes.RestauranteActivity;
 import com.android.proyectorestaurantes.adaptadores.CustomInfoWindowAdapter;
 import com.android.proyectorestaurantes.entidades.Restaurante;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -78,11 +80,13 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
         googleMap.setInfoWindowAdapter(new CustomInfoWindowAdapter(infoWindowView));
 
         Bundle bundle = getArguments();
-        ArrayList<Restaurante> restaurantesFiltrados = null;
+        ArrayList<Restaurante> restaurantesFiltrados;
 
         // Verificar si el bundle no es null y contiene el serializable
         if (bundle != null) {
             restaurantesFiltrados = (ArrayList<Restaurante>) bundle.getSerializable("restaurantesFiltrados");
+        } else {
+            restaurantesFiltrados = null;
         }
 
         // Si no hay restaurantes filtrados, asegurarse de que la lista no esté vacía
@@ -101,6 +105,18 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
         } else {
             Log.e("MapaFragment", "No se encontraron restaurantes para mostrar.");
         }
+        googleMap.setOnMarkerClickListener(marker -> {
+            for (Restaurante rest : restaurantesFiltrados) {
+                if (marker.getTitle().equals(rest.getNombre())) {
+                    // Abrir RestauranteActivity con la información del restaurante seleccionado
+                    Intent intent = new Intent(getActivity(), RestauranteActivity.class);
+                    intent.putExtra("restauranteSeleccionado", rest);
+                    startActivity(intent);
+                    break;
+                }
+            }
+            return false;
+        });
     }
 
     @Override

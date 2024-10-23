@@ -20,8 +20,8 @@ public class BaseDatos {
         platillos2.add(new Platillo("Ramen"));
 
         List<Restaurante> restaurantes = new ArrayList<>();
-        restaurantes.add(new Restaurante("Comida rapida", "Una calle 123", "09:00", "22:00", -33.456, -70.648, 4.5, platillos1));
-        restaurantes.add(new Restaurante("Restaurante Japonés", "Otra calle 123", "12:00", "23:00", -33.467, -70.650, 4.7, platillos2));
+        restaurantes.add(new Restaurante(1,"Comida rapida", "Una calle 123", "09:00", "22:00", -33.456, -70.648, 4.5, platillos1));
+        restaurantes.add(new Restaurante(2,"Restaurante Japonés", "Otra calle 123", "12:00", "23:00", -33.467, -70.650, 4.7, platillos2));
 
     }
 }

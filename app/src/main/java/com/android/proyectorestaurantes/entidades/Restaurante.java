@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.List;
 
 public class Restaurante implements Serializable {
+    private Integer id;
     private String nombre;
     private String direccion;
     private String horaApertura;
@@ -13,7 +14,8 @@ public class Restaurante implements Serializable {
     private double promedio;
     private List<Platillo> platillos;
 
-    public Restaurante(String nombre, String direccion, String horaApertura, String horaCierre, double latitud, double longitud, double promedio, List<Platillo> platillos) {
+    public Restaurante(Integer id, String nombre, String direccion, String horaApertura, String horaCierre, double latitud, double longitud, double promedio, List<Platillo> platillos) {
+        this.setId(id);
         this.setNombre(nombre);
         this.setDireccion(direccion);
         this.setHoraApertura(horaApertura);
@@ -88,5 +90,13 @@ public class Restaurante implements Serializable {
 
     public void setLatitud(double latitud) {
         this.latitud = latitud;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 }

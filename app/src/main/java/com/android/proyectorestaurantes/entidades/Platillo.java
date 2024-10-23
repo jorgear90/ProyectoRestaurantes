@@ -1,6 +1,8 @@
 package com.android.proyectorestaurantes.entidades;
 
-public class Platillo {
+import java.io.Serializable;
+
+public class Platillo implements Serializable {
     private String nombre;
 
     public Platillo(String nombre){

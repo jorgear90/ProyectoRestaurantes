@@ -14,4 +14,11 @@
     <string name="menu_principal">Pagina principal</string>
     <string name="menu_Favoritos">Favoritos</string>
     <string name="menu_holaMundo">Hola Mundo</string>
+
+    <string name="tvFecha" type="id">Fecha</string>
+    <string name="tvCorreoUsuario" type="id">Correo</string>
+    <string name="ratingBarOpinion" type="id">Puntuacion</string>
+    <string name="tvComentario" type="id">Comentario</string>
+
+
 </resources>

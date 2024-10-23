@@ -12,9 +12,14 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ProyectoRestaurantes"
         tools:targetApi="31">
+        <activity
+            android:name=".RestauranteActivity"
+            android:exported="false" />
+
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyBfI7olBIgKHxXNAu8YDgoY8Li5ZSZaqUE"/>
+            android:value="AIzaSyBfI7olBIgKHxXNAu8YDgoY8Li5ZSZaqUE" />
+
         <activity
             android:name=".Principal"
             android:exported="false"

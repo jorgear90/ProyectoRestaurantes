@@ -3,16 +3,13 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="10dp">
+    android:padding="8dp">
 
     <TextView
-        android:id="@+id/info_window_nombre_restaurante"
+        android:id="@+id/tvPlatillo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Nombre del Restaurante"
+        android:text="Platillo"
         android:textSize="16sp"
-        android:textStyle="bold"
-        android:textColor="@android:color/black"
-        android:background="@color/white"/>
-
+        android:textStyle="bold" />
 </LinearLayout>
