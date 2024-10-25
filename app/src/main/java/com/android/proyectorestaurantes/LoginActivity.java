@@ -41,10 +41,11 @@ public class LoginActivity extends AppCompatActivity {
 
                 if (isValidLogin(email, password)) {
                     Toast.makeText(LoginActivity.this, "Inicio de sesión exitoso", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                    intent.putExtra("users", users);
+                    // Redirigir a Principal.java después de un inicio de sesión exitoso
+                    Intent intent = new Intent(LoginActivity.this, Principal.class);
+                    intent.putExtra("userEmail", email);  // Opcional: pasar el email del usuario
                     startActivity(intent);
-                    finish();
+                    finish();  // Cerrar la actividad de inicio de sesión
                 } else {
                     Toast.makeText(LoginActivity.this, "Credenciales inválidas", Toast.LENGTH_SHORT).show();
                 }
