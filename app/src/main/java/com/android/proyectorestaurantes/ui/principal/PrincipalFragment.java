@@ -79,6 +79,8 @@ public class PrincipalFragment extends Fragment {
 
                 // Navegar al nav_mapa pasando el Bundle
                 navController.navigate(R.id.nav_mapa, bundle);
+
+
                 return true;
             }
 
@@ -99,6 +101,8 @@ public class PrincipalFragment extends Fragment {
         });
 
         return view;
+
+
     }
     @Override
     public void onResume() {
