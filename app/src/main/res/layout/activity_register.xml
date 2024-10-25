@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:background="#F0F0F0"
+    android:padding="24dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Registro"
+        android:textSize="24sp"
+        android:textColor="#6200EE"
+        android:fontFamily="sans-serif-medium"
+        android:paddingBottom="20dp" />
+
+    <EditText
+        android:id="@+id/et_register_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Nombre"
+        android:backgroundTint="#6200EE"
+        android:padding="12dp"
+        android:layout_marginBottom="16dp"
+        android:inputType="textPersonName" />
+
+    <EditText
+        android:id="@+id/et_register_email"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Email"
+        android:backgroundTint="#6200EE"
+        android:padding="12dp"
+        android:layout_marginBottom="16dp"
+        android:inputType="textEmailAddress" />
+
+    <EditText
+        android:id="@+id/et_register_password"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Contraseña"
+        android:backgroundTint="#6200EE"
+        android:padding="12dp"
+        android:layout_marginBottom="24dp"
+        android:inputType="textPassword" />
+
+    <Button
+        android:id="@+id/btn_register"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Registrar"
+        android:textColor="#FFFFFF"
+        android:backgroundTint="#6200EE"
+        android:padding="12dp"
+        android:textSize="16sp"
+        android:layout_marginBottom="16dp" />
+</LinearLayout>

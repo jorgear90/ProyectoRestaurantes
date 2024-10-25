@@ -4,36 +4,31 @@
 
     <application
         android:allowBackup="true"
-        android:dataExtractionRules="@xml/data_extraction_rules"
-        android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.ProyectoRestaurantes"
-        tools:targetApi="31">
-        <activity
-            android:name=".RestauranteActivity"
-            android:exported="false" />
+        android:theme="@style/Theme.ProyectoRestaurantes">
 
-        <meta-data
-            android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyBfI7olBIgKHxXNAu8YDgoY8Li5ZSZaqUE" />
+        <activity android:name=".Principal" android:exported="false" />
 
-        <activity
-            android:name=".Principal"
-            android:exported="false"
-            android:label="@string/title_activity_principal"
-            android:theme="@style/Theme.ProyectoRestaurantes.NoActionBar" />
-        <activity
-            android:name=".MainActivity"
-            android:exported="true">
+        <activity android:name=".RestauranteActivity" android:exported="true"/>
+
+        <activity android:name=".RegisterActivity" android:exported="true" />
+
+        <meta-data android:name="com.google.android.geo.API_KEY"
+                    android:value="AIzaSyBfI7olBIgKHxXNAu8YDgoY8Li5ZSZaqUE"/>
+
+        <!-- Hacer que LoginActivity sea la actividad inicial -->
+        <activity android:name=".LoginActivity" android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity android:name=".MainActivity" android:exported="true" />
     </application>
+
 
 </manifest>
