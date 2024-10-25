@@ -6,6 +6,12 @@
     app:startDestination="@+id/nav_principal">
 
     <fragment
+        android:id="@+id/nav_principal"
+        android:name="com.android.proyectorestaurantes.ui.principal.PrincipalFragment"
+        android:label="@string/menu_principal"
+        tools:layout="@layout/fragment_principal"/>
+
+    <fragment
         android:id="@+id/nav_perfil"
         android:name="com.android.proyectorestaurantes.ui.perfil.PerfilFragment"
         android:label="@string/menu_perfil"
@@ -22,11 +28,7 @@
         android:name="com.android.proyectorestaurantes.ui.ajustes.AjustesFragment"
         android:label="@string/menu_Ajustes"
         tools:layout="@layout/fragment_ajustes" />
-    <fragment
-        android:id="@+id/nav_principal"
-        android:name="com.android.proyectorestaurantes.ui.principal.PrincipalFragment"
-        android:label="@string/menu_principal"
-        tools:layout="@layout/fragment_principal"/>
+
     <fragment
         android:id="@+id/nav_favoritos"
         android:name="com.android.proyectorestaurantes.ui.favoritos.FavoritosFragment"

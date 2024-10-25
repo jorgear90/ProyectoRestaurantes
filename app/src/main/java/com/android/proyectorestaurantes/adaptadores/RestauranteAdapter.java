@@ -49,9 +49,7 @@ public class RestauranteAdapter extends RecyclerView.Adapter<RestauranteAdapter.
     @Override
     public RestauranteViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         //return new RestauranteViewHolder(LayoutInflater.from(context).inflate(R.layout.lista_restaurante,parent,false));
-        Log.e("respuesta","se infla MAL");
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.lista_restaurante, parent, false);
-        Log.e("respuesta","se infla bien");
         return new RestauranteViewHolder(view);
     }
 

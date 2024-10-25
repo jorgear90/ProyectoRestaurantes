@@ -61,13 +61,6 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
             }
         });
 
-        Button btnVolver = view.findViewById(R.id.btnvolver);
-        btnVolver.setOnClickListener(v -> {
-            // Navegar de regreso al PrincipalFragment
-            NavController navController = NavHostFragment.findNavController(MapaFragment.this);
-            navController.navigate(R.id.nav_principal);
-        });
-
         return view;
     }
 
@@ -117,6 +110,8 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
             }
             return false;
         });
+
+
     }
 
     @Override
