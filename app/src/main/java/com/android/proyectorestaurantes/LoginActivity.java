@@ -41,9 +41,14 @@ public class LoginActivity extends AppCompatActivity {
 
                 if (isValidLogin(email, password)) {
                     Toast.makeText(LoginActivity.this, "Inicio de sesión exitoso", Toast.LENGTH_SHORT).show();
+
+                    // Obtener el nombre del usuario logueado
+                    String userName = getUserName(email);
+
                     // Redirigir a Principal.java después de un inicio de sesión exitoso
                     Intent intent = new Intent(LoginActivity.this, Principal.class);
-                    intent.putExtra("userEmail", email);  // Opcional: pasar el email del usuario
+                    intent.putExtra("userEmail", email);
+                    intent.putExtra("userName", userName);  // Pasar el nombre del usuario también
                     startActivity(intent);
                     finish();  // Cerrar la actividad de inicio de sesión
                 } else {
@@ -70,7 +75,17 @@ public class LoginActivity extends AppCompatActivity {
         }
         return false;
     }
+
+    private String getUserName(String email) {
+        for (User user : users) {
+            if (user.getEmail().equals(email)) {
+                return user.getName();  // Suponiendo que el objeto User tiene un método getName()
+            }
+        }
+        return "";
+    }
 }
+
 
 
 
