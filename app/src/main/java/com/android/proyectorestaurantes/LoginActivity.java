@@ -1,18 +1,13 @@
 package com.android.proyectorestaurantes;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
-
-import com.android.proyectorestaurantes.ui.principal.PrincipalFragment;
-
 import java.util.ArrayList;
 
 public class LoginActivity extends AppCompatActivity {
@@ -38,7 +33,6 @@ public class LoginActivity extends AppCompatActivity {
             users = new ArrayList<>();
         }
 
-
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -46,25 +40,20 @@ public class LoginActivity extends AppCompatActivity {
                 String password = etLoginPassword.getText().toString().trim();
 
                 if (isValidLogin(email, password)) {
-                    guardarUserEmail(email);
                     Toast.makeText(LoginActivity.this, "Inicio de sesión exitoso", Toast.LENGTH_SHORT).show();
+
+                    // Obtener el nombre del usuario logueado
+                    String userName = getUserName(email);
+
+                    // Redirigir a Principal.java después de un inicio de sesión exitoso
                     Intent intent = new Intent(LoginActivity.this, Principal.class);
-                    intent.putExtra("users", users);
+                    intent.putExtra("userEmail", email);
+                    intent.putExtra("userName", userName);  // Pasar el nombre del usuario también
                     startActivity(intent);
-                    finish();
-                }
-                else {
+                    finish();  // Cerrar la actividad de inicio de sesión
+                } else {
                     Toast.makeText(LoginActivity.this, "Credenciales inválidas", Toast.LENGTH_SHORT).show();
                 }
-            }
-        });
-
-        Button botonIrAPrincipal = findViewById(R.id.btn_provisorio);
-        botonIrAPrincipal.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(LoginActivity.this, Principal.class);
-                startActivity(intent);
             }
         });
 
@@ -87,13 +76,16 @@ public class LoginActivity extends AppCompatActivity {
         return false;
     }
 
-    private void guardarUserEmail(String email) {
-        SharedPreferences prefs = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putString("userEmail", email);
-        editor.apply();
+    private String getUserName(String email) {
+        for (User user : users) {
+            if (user.getEmail().equals(email)) {
+                return user.getName();  // Suponiendo que el objeto User tiene un método getName()
+            }
+        }
+        return "";
     }
 }
+
 
 
 

@@ -1,18 +1,18 @@
 package com.android.proyectorestaurantes;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 import androidx.annotation.NonNull;
-import com.google.android.material.navigation.NavigationView;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.appcompat.app.AppCompatActivity;
-
+import com.google.android.material.navigation.NavigationView;
 import com.android.proyectorestaurantes.databinding.ActivityPrincipalBinding;
 
 public class Principal extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -21,6 +21,9 @@ public class Principal extends AppCompatActivity implements NavigationView.OnNav
     private ActivityPrincipalBinding binding;
     private NavController navController;
     private DrawerLayout drawer;
+
+    private String userName;
+    private String userEmail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +35,19 @@ public class Principal extends AppCompatActivity implements NavigationView.OnNav
         setSupportActionBar(binding.appBarPrincipal.toolbar);
         drawer = binding.drawerLayout;
         NavigationView navigationView = binding.navView;
+
+        // Obtener los datos del usuario enviados desde LoginActivity
+        userName = getIntent().getStringExtra("userName");
+        userEmail = getIntent().getStringExtra("userEmail");
+
+        // Configurar el header del NavigationView
+        View headerView = navigationView.getHeaderView(0);
+        TextView navHeaderName = headerView.findViewById(R.id.nav_header_name);
+        TextView navHeaderEmail = headerView.findViewById(R.id.nav_header_email);
+
+        // Asignar los datos del usuario al header
+        navHeaderName.setText(userName);
+        navHeaderEmail.setText(userEmail);
 
         // Configuración del AppBar con los fragmentos en el Navigation Drawer
         mAppBarConfiguration = new AppBarConfiguration.Builder(
@@ -46,6 +62,16 @@ public class Principal extends AppCompatActivity implements NavigationView.OnNav
 
         // Configurar el listener para manejar la selección del Navigation Drawer
         navigationView.setNavigationItemSelectedListener(this);
+
+        // Pasar los datos al PerfilFragment cuando se cargue
+        navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
+            if (destination.getId() == R.id.nav_perfil) {
+                Bundle bundle = new Bundle();
+                bundle.putString("userName", userName);
+                bundle.putString("userEmail", userEmail);
+                navController.navigate(R.id.nav_perfil, bundle);
+            }
+        });
     }
 
     @Override
@@ -61,29 +87,14 @@ public class Principal extends AppCompatActivity implements NavigationView.OnNav
                 || super.onSupportNavigateUp();
     }
 
-    // Método para restablecer el PrincipalFragment cuando se navega de regreso
-    private void resetPrincipalFragment() {
-        if (navController.getCurrentDestination() != null
-                && navController.getCurrentDestination().getId() != R.id.nav_principal) {
-            // Si no estamos en el PrincipalFragment, navegar a él
-            navController.navigate(R.id.nav_principal);
-        } else {
-            // Si ya estamos en PrincipalFragment, forzar la recarga del fragmento
-            navController.popBackStack(R.id.nav_principal, true); // Limpiar el back stack
-            navController.navigate(R.id.nav_principal); // Cargar PrincipalFragment nuevamente
-        }
-    }
-
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
 
         // Verificar si el usuario seleccionó el ítem 'Principal' en el Navigation Drawer
         if (id == R.id.nav_principal) {
-            Log.e("respuesta", "ID = NAV_PRINCIPAL");
-            resetPrincipalFragment();  // Llamamos al método para restablecer el fragmento
+            resetPrincipalFragment();
         } else {
-            // Permitir la navegación estándar para otros ítems
             NavigationUI.onNavDestinationSelected(item, navController);
         }
 
@@ -91,4 +102,18 @@ public class Principal extends AppCompatActivity implements NavigationView.OnNav
         drawer.closeDrawer(binding.navView);
         return true;
     }
+
+    // Método para restablecer el PrincipalFragment cuando se navega de regreso
+    private void resetPrincipalFragment() {
+        if (navController.getCurrentDestination() != null
+                && navController.getCurrentDestination().getId() != R.id.nav_principal) {
+            navController.navigate(R.id.nav_principal);
+        } else {
+            navController.popBackStack(R.id.nav_principal, true);
+            navController.navigate(R.id.nav_principal);
+        }
+    }
 }
+
+
+
