@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.proyectorestaurantes.R;
 import com.android.proyectorestaurantes.entidades.Opiniones;
+import com.android.proyectorestaurantes.entidades.Restaurante;
 import com.android.proyectorestaurantes.entidades.Usuario;
 
 import java.util.ArrayList;
@@ -17,11 +18,14 @@ import java.util.ArrayList;
 public class OpinionesAdapter extends RecyclerView.Adapter<OpinionesAdapter.OpinionesViewHolder> {
 
     private ArrayList<Opiniones> opinionesList;
-    private ArrayList<Usuario> usuariosList; // Para obtener el correo del usuario basado en idUsuario
+    private ArrayList<Usuario> usuariosList;// Para obtener el correo del usuario basado en idUsuario
+    private Integer idRes;
+    private ArrayList<Opiniones> opinionesFiltradas;
 
-    public OpinionesAdapter(ArrayList<Opiniones> opinionesList, ArrayList<Usuario> usuariosList) {
+    public OpinionesAdapter(ArrayList<Opiniones> opinionesList, ArrayList<Usuario> usuariosList, int idRes) {
         this.opinionesList = opinionesList;
         this.usuariosList = usuariosList;
+        this.idRes = idRes;
     }
 
     @NonNull
@@ -35,23 +39,31 @@ public class OpinionesAdapter extends RecyclerView.Adapter<OpinionesAdapter.Opin
     @Override
     public void onBindViewHolder(@NonNull OpinionesViewHolder holder, int position) {
         Opiniones opinion = opinionesList.get(position);
-        holder.tvFecha.setText(opinion.getFecha());
-        holder.tvComentario.setText(opinion.getComentario());
-        holder.ratingBar.setRating(opinion.getPuntuacion());
 
-        // Buscar el correo del usuario correspondiente a idUsuario
-        for (Usuario usuario : usuariosList) {
-            if (usuario.getId() == opinion.getIdUsuario()) {
-                holder.tvCorreoUsuario.setText(usuario.getCorreo());
+        for(Opiniones opiniones : opinionesList){
+            if(idRes == opiniones.getIdRestaurante()){
+                holder.tvFecha.setText(opinion.getFecha());
+                holder.tvComentario.setText(opinion.getComentario());
+                holder.ratingBar.setRating(opinion.getPuntuacion());
+                holder.tvCorreoUsuario.setText(opinion.getCorreoUsuario());
                 break;
             }
         }
+
+        /*// Buscar el correo del usuario correspondiente a idUsuario
+        for (Usuario usuario : usuariosList) {
+            if (usuario.getCorreo() == opinion.getCorreoUsuario()) {
+                holder.tvCorreoUsuario.setText(usuario.getCorreo());
+                break;
+            }
+        }*/
     }
 
     @Override
     public int getItemCount() {
         return opinionesList.size();
     }
+
 
     public static class OpinionesViewHolder extends RecyclerView.ViewHolder {
         TextView tvFecha, tvCorreoUsuario, tvComentario;

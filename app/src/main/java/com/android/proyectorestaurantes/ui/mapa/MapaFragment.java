@@ -16,6 +16,7 @@ import androidx.navigation.fragment.NavHostFragment;
 
 import com.android.proyectorestaurantes.R;
 import com.android.proyectorestaurantes.RestauranteActivity;
+import com.android.proyectorestaurantes.User;
 import com.android.proyectorestaurantes.adaptadores.CustomInfoWindowAdapter;
 import com.android.proyectorestaurantes.entidades.Restaurante;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -32,6 +33,7 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
 
     private MapView mapView;
     private GoogleMap googleMap;
+    private ArrayList<User> users;
 
     @Nullable
     @Override
