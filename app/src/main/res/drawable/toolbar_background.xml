@@ -1,0 +1,8 @@
+<!-- res/drawable/toolbar_background.xml -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Fondo blanco -->
+    <item android:drawable="@android:color/white" />
+
+    <!-- Drawable de bordes -->
+    <item android:drawable="@drawable/bordes" />
+</layer-list>

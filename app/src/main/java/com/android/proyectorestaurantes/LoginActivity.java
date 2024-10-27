@@ -1,6 +1,8 @@
 package com.android.proyectorestaurantes;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -16,6 +18,9 @@ public class LoginActivity extends AppCompatActivity {
     private Button btnLogin;
     private TextView tvRegister;
     private ArrayList<User> users;
+    private static final String PREFS_NAME = "MyAppPrefs";
+    private static final String KEY_USER_EMAIL = "userEmail";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +31,7 @@ public class LoginActivity extends AppCompatActivity {
         etLoginPassword = findViewById(R.id.et_login_password);
         btnLogin = findViewById(R.id.btn_login);
         tvRegister = findViewById(R.id.tv_register);
+
 
         // Obtener la lista de usuarios del intent
         users = (ArrayList<User>) getIntent().getSerializableExtra("users");
@@ -39,7 +45,9 @@ public class LoginActivity extends AppCompatActivity {
                 String email = etLoginEmail.getText().toString().trim();
                 String password = etLoginPassword.getText().toString().trim();
 
+
                 if (isValidLogin(email, password)) {
+                    guardarUserEmail(email);
                     Toast.makeText(LoginActivity.this, "Inicio de sesión exitoso", Toast.LENGTH_SHORT).show();
 
                     // Obtener el nombre del usuario logueado
@@ -84,6 +92,17 @@ public class LoginActivity extends AppCompatActivity {
         }
         return "";
     }
+    private void guardarUserEmail(String email) {
+        SharedPreferences prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);  // Usar la constante PREFS_NAME aquí
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString(KEY_USER_EMAIL, email);
+        editor.apply();
+    }
+    public static String obtenerUserEmail(Context context) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        return sharedPreferences.getString(KEY_USER_EMAIL, null);
+    }
+
 }
 
 

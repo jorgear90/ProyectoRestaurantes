@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 
 import com.android.proyectorestaurantes.R;
+import com.android.proyectorestaurantes.User;
 import com.android.proyectorestaurantes.adaptadores.RestauranteAdapter;
 import com.android.proyectorestaurantes.entidades.Platillo;
 import com.android.proyectorestaurantes.entidades.Restaurante;
@@ -30,10 +31,13 @@ public class PrincipalFragment extends Fragment {
     private ArrayList<Restaurante> restaurantes;
     private SearchView searchView;
 
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_principal, container, false);
+
+
 
         // Inicialización de la lista de restaurantes
         restaurantes = new ArrayList<>();
@@ -46,7 +50,7 @@ public class PrincipalFragment extends Fragment {
         List<Platillo> platillos2 = new ArrayList<>();
         platillos2.add(new Platillo("Sushi"));
         platillos2.add(new Platillo("Ramen"));
-        restaurantes.add(new Restaurante(2,"Restaurante Japonés", "Avenida Siempre Viva 456", "12:00", "23:00", -33.467, -70.650, 4.7, platillos2));
+        restaurantes.add(new Restaurante(2,"Restaurante Japonés", "Avenida Siempre Viva 456", "12:00", "23:00", -29.87495986587249, -71.24276660770154, 4.7, platillos2));
 
         // Configuración del RecyclerView y el Adapter
         recyclerView = view.findViewById(R.id.recyclerViewRestaurantes);

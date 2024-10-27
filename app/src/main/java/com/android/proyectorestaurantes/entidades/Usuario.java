@@ -1,13 +1,11 @@
 package com.android.proyectorestaurantes.entidades;
 
 public class Usuario {
-    private Integer id;
     private String nombre;
     private String correo;
     private String contraseña;
 
-    public Usuario(int id, String nombre, String correo, String contraseña){
-        this.setId(id);
+    public Usuario(String nombre, String correo, String contraseña){
         this.setNombre(nombre);
         this.setCorreo(correo);
         this.setContraseña(contraseña);
@@ -38,11 +36,5 @@ public class Usuario {
         this.contraseña = contraseña;
     }
 
-    public Integer getId() {
-        return id;
-    }
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
 }
