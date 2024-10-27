@@ -33,6 +33,7 @@ public class FavoritosActivity extends AppCompatActivity {
     private PlatilloAdapter platilloAdapter;
     private int restauranteId;
     private Button btnFavoritos;
+    private boolean esFavorito;
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -51,7 +52,8 @@ public class FavoritosActivity extends AppCompatActivity {
         String userEmail = obtenerUserEmail();
 
         // Verifica si el restaurante ya está en favoritos
-        boolean esFavorito = verificarFavorito(userEmail, restauranteId);
+        esFavorito = verificarFavorito(userEmail, restauranteId);
+        btnFavoritos.setBackgroundColor(esFavorito ? Color.BLACK : Color.WHITE);
 
         // Establece el color del botón según si es favorito o no
         btnFavoritos.setBackgroundColor(esFavorito ? Color.BLACK : Color.WHITE);
@@ -87,7 +89,12 @@ public class FavoritosActivity extends AppCompatActivity {
                 // Si ya es favorito, lo elimina
                 eliminarFavorito(userEmail, restauranteId);
                 btnFavoritos.setBackgroundColor(Color.WHITE);
+            }else {
+                agregarFavorito(userEmail, favorito);
+                btnFavoritos.setBackgroundColor(Color.BLACK);
             }
+
+            esFavorito = !esFavorito;
         });
 
 
@@ -116,11 +123,11 @@ public class FavoritosActivity extends AppCompatActivity {
         SharedPreferences prefs = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
         return prefs.getString("userEmail", "default@example.com");
     }
-    private void agregarFavorito(String correoUsuario, Restaurante restaurante) {
+    private void agregarFavorito(String correoUsuario, Favoritos restaurante) {
         Favoritos nuevoFavorito = new Favoritos(
                 correoUsuario,
-                restaurante.getId(),
-                restaurante.getNombre(),
+                restaurante.getIdRestaurante(),
+                restaurante.getNombreRetaurante(),
                 restaurante.getDireccion(),
                 restaurante.getHoraApertura(),
                 restaurante.getHoraCierre(),
