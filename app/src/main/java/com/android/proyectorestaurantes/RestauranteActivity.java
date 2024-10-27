@@ -2,6 +2,7 @@ package com.android.proyectorestaurantes;
 
 import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -73,7 +74,7 @@ public class RestauranteActivity extends AppCompatActivity {
 
         // Verificar si el restaurante está en favoritos
         esFavorito = verificarFavorito(userEmail, restauranteId);
-        btnFavoritos.setBackgroundColor(esFavorito ? Color.BLACK : Color.WHITE);
+        //btnFavoritos.setBackgroundColor(esFavorito ? Color.BLACK : Color.WHITE);
 
         // Configurar el RecyclerView para opiniones
         rvOpiniones = findViewById(R.id.rvOpiniones);
@@ -96,6 +97,14 @@ public class RestauranteActivity extends AppCompatActivity {
         platilloAdapter = new PlatilloAdapter(platillosList);
         rvPlatillos.setAdapter(platilloAdapter);
 
+        if (esFavorito) {
+            btnFavoritos.setBackgroundColor(Color.BLACK);
+            btnFavoritos.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.btn_star_off_white, 0); // ícono blanco
+        } else {
+            btnFavoritos.setBackgroundColor(Color.WHITE);
+            btnFavoritos.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.btn_star_off_black, 0); // ícono negro
+        }
+
         // Mostrar datos del restaurante
         if (restaurante != null) {
             tvNombreRestaurante.setText(restaurante.getNombre());
@@ -111,12 +120,17 @@ public class RestauranteActivity extends AppCompatActivity {
         btnFavoritos.setOnClickListener(v -> {
 
             if (esFavorito) {
+                // Si ya es favorito, lo elimina
                 eliminarFavorito(userEmail, restauranteId);
                 btnFavoritos.setBackgroundColor(Color.WHITE);
+                btnFavoritos.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.btn_star_off_black, 0); // ícono negro
             } else {
+                // Lo agrega a favoritos
                 agregarFavorito(userEmail, restaurante);
                 btnFavoritos.setBackgroundColor(Color.BLACK);
+                btnFavoritos.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.btn_star_off_white, 0); // ícono blanco
             }
+
             esFavorito = !esFavorito;
         });
 
