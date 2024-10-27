@@ -21,6 +21,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.proyectorestaurantes.adaptadores.OpinionesAdapter;
 import com.android.proyectorestaurantes.adaptadores.PlatilloAdapter;
+import com.android.proyectorestaurantes.bd.BaseDatos;
+import com.android.proyectorestaurantes.entidades.Favoritos;
 import com.android.proyectorestaurantes.entidades.Opiniones;
 import com.android.proyectorestaurantes.entidades.Platillo;
 import com.android.proyectorestaurantes.entidades.Restaurante;
@@ -31,6 +33,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import android.graphics.Color;
 
 public class RestauranteActivity extends AppCompatActivity {
 
@@ -46,7 +49,7 @@ public class RestauranteActivity extends AppCompatActivity {
     private ArrayList<Opiniones> opinionesList;
     private ArrayList<Opiniones> opinionesFiltradas;
     private int restauranteId; // ID del restaurante actual (deberías inicializarlo correctamente)
-    //private String userEmail;
+    private Button btnFavoritos;
 
     @SuppressLint({"SetTextI18n", "MissingInflatedId"})
     @Override
@@ -56,6 +59,7 @@ public class RestauranteActivity extends AppCompatActivity {
 
         RatingBar ratingBar1 = findViewById(R.id.ratingBarRestaurante);
         Button btnEnviar = findViewById(R.id.btnEnviar);
+        btnFavoritos = findViewById(R.id.btnFavoritos);
 
         // Inicializamos las listas de opiniones y usuarios
         opinionesList = obtenerOpiniones();
@@ -73,6 +77,12 @@ public class RestauranteActivity extends AppCompatActivity {
         restauranteId = restaurante.getId();
         // Obtén el email del usuario
         String userEmail = obtenerUserEmail();
+
+        // Verifica si el restaurante ya está en favoritos
+        boolean esFavorito = verificarFavorito(userEmail, restauranteId);
+
+        // Establece el color del botón según si es favorito o no
+        btnFavoritos.setBackgroundColor(esFavorito ? Color.BLACK : Color.WHITE);
 
         // Configuramos el Adapter con las listas de opiniones y usuarios
         opinionesAdapter = new OpinionesAdapter(opinionesFiltradas, usuariosList, restaurante.getId());
@@ -118,6 +128,18 @@ public class RestauranteActivity extends AppCompatActivity {
             });
         }
 
+        btnFavoritos.setOnClickListener(v -> {
+            if (esFavorito) {
+                // Si ya es favorito, lo elimina
+                eliminarFavorito(userEmail, restauranteId);
+                btnFavoritos.setBackgroundColor(Color.WHITE);
+            } else {
+                // Si no es favorito, lo agrega
+                agregarFavorito(userEmail, restaurante);
+                btnFavoritos.setBackgroundColor(Color.BLACK);
+            }
+        });
+
         btnEnviar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -130,27 +152,43 @@ public class RestauranteActivity extends AppCompatActivity {
                     return;
                 }
 
-                // Genera un nuevo ID para la opinión. Asegúrate de que sea único.
-                int nuevoId = opinionesList.size() + 1;
-
                 // Obtén la fecha actual en el formato deseado
                 String fechaActual = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
 
-                // Crea una nueva opinión con un ID y atributos únicos
-                Opiniones nuevaOpinion = new Opiniones(nuevoId, userEmail, restauranteId, puntuacion, comentario, fechaActual);
+                // Busca si ya existe una opinión con el mismo correo y restaurante ID
+                boolean opinionExistente = false;
+                for (Opiniones opinion : opinionesList) {
+                    if (opinion.getCorreoUsuario().equals(userEmail) && opinion.getIdRestaurante() == restauranteId) {
+                        // Si existe una opinión, actualiza la puntuación, comentario y fecha
+                        opinion.setPuntuacion(puntuacion);
+                        opinion.setComentario(comentario);
+                        opinion.setFecha(fechaActual);
+                        opinionExistente = true;
+                        opinionesAdapter.notifyDataSetChanged();  // Notifica al adapter que los datos han cambiado
+                        Toast.makeText(RestauranteActivity.this, "Opinión actualizada", Toast.LENGTH_SHORT).show();
+                        break;
+                    }
+                }
 
-                // Añadir la nueva opinión solo a opinionesFiltradas para que se muestre correctamente
-                opinionesFiltradas.add(nuevaOpinion);
+                if (!opinionExistente) {
+                    // Genera un nuevo ID para la opinión. Asegúrate de que sea único.
+                    int nuevoId = opinionesList.size() + 1;
+                    // Crea una nueva opinión con un ID y atributos únicos
+                    Opiniones nuevaOpinion = new Opiniones(nuevoId, userEmail, restauranteId, puntuacion, comentario, fechaActual);
 
-                // Notifica solo el cambio del nuevo elemento al adaptador
-                opinionesAdapter.notifyItemInserted(opinionesFiltradas.size() - 1);
+                    // Añadir la nueva opinión a la lista de opiniones y la lista filtrada
+                    opinionesList.add(nuevaOpinion);
+                    opinionesFiltradas.add(nuevaOpinion);
+
+                    // Notifica al adaptador que se ha insertado un nuevo elemento
+                    opinionesAdapter.notifyItemInserted(opinionesFiltradas.size() - 1);
+
+                    Toast.makeText(RestauranteActivity.this, "Opinión agregada", Toast.LENGTH_SHORT).show();
+                }
 
                 // Limpia el campo de comentario y resetea el RatingBar
                 etComentario.setText("");
                 ratingBar1.setRating(0);
-
-                // Muestra un mensaje de confirmación
-                Toast.makeText(RestauranteActivity.this, "Opinión agregada", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -195,6 +233,48 @@ public class RestauranteActivity extends AppCompatActivity {
         SharedPreferences prefs = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
         return prefs.getString("userEmail", "default@example.com");
     }
+    // Método para verificar si un restaurante ya está en favoritos
+    private boolean verificarFavorito(String correoUsuario, int idRestaurante) {
+        if (BaseDatos.favoritos == null) return false;
+
+        for (Favoritos favorito : BaseDatos.favoritos) {
+            if (favorito.getCorreoUsuario().equals(correoUsuario) && favorito.getIdRestaurante() == idRestaurante) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    // Método para agregar un restaurante a favoritos
+    private void agregarFavorito(String correoUsuario, Restaurante restaurante) {
+        Favoritos nuevoFavorito = new Favoritos(
+                correoUsuario,
+                restaurante.getId(),
+                restaurante.getNombre(),
+                restaurante.getDireccion(),
+                restaurante.getHoraApertura(),
+                restaurante.getHoraCierre(),
+                restaurante.getPromedio(),
+                restaurante.getPlatillos()
+        );
+        BaseDatos.favoritos.add(nuevoFavorito);
+        Toast.makeText(this, "Restaurante agregado a favoritos", Toast.LENGTH_SHORT).show();
+    }
+
+    // Método para eliminar un restaurante de favoritos
+    private void eliminarFavorito(String correoUsuario, int idRestaurante) {
+        if (BaseDatos.favoritos == null) return;
+
+        for (int i = 0; i < BaseDatos.favoritos.size(); i++) {
+            Favoritos favorito = BaseDatos.favoritos.get(i);
+            if (favorito.getCorreoUsuario().equals(correoUsuario) && favorito.getIdRestaurante() == idRestaurante) {
+                BaseDatos.favoritos.remove(i);
+                Toast.makeText(this, "Restaurante eliminado de favoritos", Toast.LENGTH_SHORT).show();
+                break;
+            }
+        }
+    }
+
 
 
 }

@@ -1,5 +1,6 @@
 package com.android.proyectorestaurantes.bd;
 
+import com.android.proyectorestaurantes.entidades.Favoritos;
 import com.android.proyectorestaurantes.entidades.Platillo;
 import com.android.proyectorestaurantes.entidades.Restaurante;
 
@@ -23,5 +24,10 @@ public class BaseDatos {
         restaurantes.add(new Restaurante(1,"Comida rapida", "Una calle 123", "09:00", "22:00", -33.456, -70.648, 4.5, platillos1));
         restaurantes.add(new Restaurante(2,"Restaurante Japonés", "Otra calle 123", "12:00", "23:00", -33.467, -70.650, 4.7, platillos2));
 
+
+
     }
+
+    // Lista estática para que sea accesible desde otras clases
+    public static ArrayList<Favoritos> favoritos = new ArrayList<>();
 }

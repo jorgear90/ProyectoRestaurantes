@@ -12,7 +12,7 @@
 
         <!-- Nombre del Restaurante -->
         <TextView
-            android:id="@+id/tvNombreRestaurante"
+            android:id="@+id/favNombreRestaurante"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Nombre del Restaurante"
@@ -25,13 +25,13 @@
 
         <!-- Nota del Restaurante -->
         <TextView
-            android:id="@+id/tvNotaRestaurante"
+            android:id="@+id/favNotaRestaurante"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Nota: 4.5"
             android:textSize="18sp"
             android:padding="16dp"
-            app:layout_constraintTop_toBottomOf="@id/tvNombreRestaurante"
+            app:layout_constraintTop_toBottomOf="@id/favNombreRestaurante"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginTop="16dp" />
@@ -41,7 +41,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="16dp"
-            app:layout_constraintTop_toBottomOf="@id/tvNotaRestaurante"
+            app:layout_constraintTop_toBottomOf="@id/favNotaRestaurante"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginTop="16dp">
@@ -53,7 +53,7 @@
 
                 <!-- Ejemplo de una imagen, deberías agregar más programáticamente -->
                 <ImageView
-                    android:id="@+id/imgRestaurante1"
+                    android:id="@+id/favimgRestaurante1"
                     android:layout_width="150dp"
                     android:layout_height="100dp"
                     android:scaleType="centerCrop"
@@ -67,7 +67,7 @@
 
         <!-- Dirección del Restaurante -->
         <Button
-            android:id="@+id/btnHorario"
+            android:id="@+id/favbtnHorario"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="16dp"
@@ -80,20 +80,20 @@
             app:layout_constraintVertical_bias="0.433" />
 
         <TextView
-            android:id="@+id/tvDireccionRestaurante"
+            android:id="@+id/favDireccionRestaurante"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Dirección del Restaurante"
             android:textSize="16sp"
             android:padding="16dp"
-            app:layout_constraintTop_toBottomOf="@id/btnHorario"
+            app:layout_constraintTop_toBottomOf="@id/favbtnHorario"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginTop="16dp" />
 
         <!-- RecyclerView para los platillos -->
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvPlatillos"
+            android:id="@+id/favPlatillos"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
@@ -101,72 +101,11 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tvDireccionRestaurante" />
+            app:layout_constraintTop_toBottomOf="@id/favDireccionRestaurante" />
 
-        <!-- RatingBar -->
-        <RatingBar
-            android:id="@+id/ratingBarRestaurante"
-            android:layout_width="269dp"
-            android:layout_height="84dp"
-            android:layout_marginTop="16dp"
-            android:numStars="5"
-            android:padding="16dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/rvPlatillos" />
-
-        <!-- Sección de Comentarios -->
-        <TextView
-            android:id="@+id/tvComentarios"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Comentarios"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:padding="16dp"
-            app:layout_constraintTop_toBottomOf="@id/ratingBarRestaurante"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginTop="16dp" />
-
-        <EditText
-            android:id="@+id/etComentario"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Escribe tu comentario"
-            android:padding="16dp"
-            app:layout_constraintTop_toBottomOf="@id/tvComentarios"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginTop="16dp" />
-
-        <!-- RecyclerView para las opiniones -->
 
         <Button
-            android:id="@+id/btnEnviar"
-            android:layout_width="110dp"
-            android:layout_height="46dp"
-            android:text="Enviar"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.946"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/etComentario"
-            app:layout_constraintVertical_bias="0.07" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvOpiniones"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:padding="16dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btnEnviar"
-            android:layout_marginTop="16dp"/>
-
-        <Button
-            android:id="@+id/btnFavoritos"
+            android:id="@+id/favbtnFavoritos"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="88dp"
