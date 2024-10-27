@@ -1,6 +1,7 @@
 package com.android.proyectorestaurantes;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -24,6 +25,15 @@ public class Principal extends AppCompatActivity implements NavigationView.OnNav
 
     private String userName;
     private String userEmail;
+
+    // Métodos estáticos para obtener el nombre y correo
+    public String getUserName() {
+        return userName;
+    }
+
+    public String getUserEmail() {
+        return userEmail;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,21 +72,10 @@ public class Principal extends AppCompatActivity implements NavigationView.OnNav
 
         // Configurar el listener para manejar la selección del Navigation Drawer
         navigationView.setNavigationItemSelectedListener(this);
-
-        // Pasar los datos al PerfilFragment cuando se cargue
-        navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
-            if (destination.getId() == R.id.nav_perfil) {
-                Bundle bundle = new Bundle();
-                bundle.putString("userName", userName);
-                bundle.putString("userEmail", userEmail);
-                navController.navigate(R.id.nav_perfil, bundle);
-            }
-        });
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.principal, menu);
         return true;
     }
@@ -91,19 +90,16 @@ public class Principal extends AppCompatActivity implements NavigationView.OnNav
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
 
-        // Verificar si el usuario seleccionó el ítem 'Principal' en el Navigation Drawer
         if (id == R.id.nav_principal) {
             resetPrincipalFragment();
         } else {
             NavigationUI.onNavDestinationSelected(item, navController);
         }
 
-        // Cerrar el Drawer después de seleccionar un ítem
         drawer.closeDrawer(binding.navView);
         return true;
     }
 
-    // Método para restablecer el PrincipalFragment cuando se navega de regreso
     private void resetPrincipalFragment() {
         if (navController.getCurrentDestination() != null
                 && navController.getCurrentDestination().getId() != R.id.nav_principal) {

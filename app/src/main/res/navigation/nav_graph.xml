@@ -3,18 +3,32 @@
     android:id="@+id/nav_graph"
     app:startDestination="@id/nav_principal">
 
+    <!-- Fragmento principal -->
     <fragment
         android:id="@+id/nav_principal"
         android:name="com.android.proyectorestaurantes.ui.principal.PrincipalFragment"
-        android:label="Pagina principal">
-        <!-- Acción para navegar al mapa -->
+        android:label="Página principal">
+        <!-- Acción para navegar al Mapa -->
         <action
             android:id="@+id/action_nav_principal_to_fragmentMapa"
             app:destination="@id/fragmentMapa" />
+
+        <!-- Acción para navegar al Perfil -->
+        <action
+            android:id="@+id/action_nav_principal_to_fragmentPerfil"
+            app:destination="@id/nav_perfil" />
     </fragment>
 
+    <!-- Fragmento de Mapa -->
     <fragment
         android:id="@+id/fragmentMapa"
         android:name="com.android.proyectorestaurantes.ui.mapa.MapaFragment"
         android:label="Mapa" />
+
+    <!-- Fragmento de Perfil -->
+    <fragment
+        android:id="@+id/nav_perfil"
+        android:name="com.android.proyectorestaurantes.ui.perfil.PerfilFragment"
+        android:label="Perfil" />
 </navigation>
+
