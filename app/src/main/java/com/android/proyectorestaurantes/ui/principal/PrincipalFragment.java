@@ -9,6 +9,7 @@ import android.widget.SearchView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -16,10 +17,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 
 import com.android.proyectorestaurantes.R;
-import com.android.proyectorestaurantes.User;
 import com.android.proyectorestaurantes.adaptadores.RestauranteAdapter;
 import com.android.proyectorestaurantes.entidades.Platillo;
 import com.android.proyectorestaurantes.entidades.Restaurante;
+import com.android.proyectorestaurantes.entidades.Servicios;
+import com.android.proyectorestaurantes.ui.mapa.MapaFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,21 +44,41 @@ public class PrincipalFragment extends Fragment {
         // Inicialización de la lista de restaurantes
         restaurantes = new ArrayList<>();
         // Llena la lista con restaurantes
+        List<Servicios> servicios1 = new ArrayList<>();
+        servicios1.add(new Servicios("Estacionamiento"));
+        servicios1.add(new Servicios("Para llevar"));
+        servicios1.add(new Servicios("Wifi"));
         List<Platillo> platillos1 = new ArrayList<>();
-        platillos1.add(new Platillo("Tacos"));
-        platillos1.add(new Platillo("Quesadillas"));
-        restaurantes.add(new Restaurante(1,"Restaurante Mexicano", "Calle Falsa 123", "09:00", "22:00", -29.8737410, -71.2394532, 4.5, platillos1));
+        platillos1.add(new Platillo("Tacos",6000));
+        platillos1.add(new Platillo("Quesadillas", 3500));
+        restaurantes.add(new Restaurante(1,"Restaurante Mexicano", "Calle Falsa 123", "09:00", "22:00", -29.8737410, -71.2394532, 4.5, platillos1,servicios1,"La Serena"));
 
+        List<Servicios> servicios2 = new ArrayList<>();
+        servicios2.add(new Servicios("Estacionamiento"));
+        servicios2.add(new Servicios("Salon privado"));
+        servicios2.add(new Servicios("Wifi"));
         List<Platillo> platillos2 = new ArrayList<>();
-        platillos2.add(new Platillo("Sushi"));
-        platillos2.add(new Platillo("Ramen"));
-        restaurantes.add(new Restaurante(2,"Restaurante Japonés", "Avenida Siempre Viva 456", "12:00", "23:00", -29.87495986587249, -71.24276660770154, 4.7, platillos2));
+        platillos2.add(new Platillo("Sushi",15000));
+        platillos2.add(new Platillo("Ramen",12000));
+        restaurantes.add(new Restaurante(2,"Restaurante Japonés", "Avenida Siempre Viva 456", "12:00", "23:00", -29.87495986587249, -71.24276660770154, 4.7, platillos2,servicios2,"La Serena"));
 
         // Configuración del RecyclerView y el Adapter
         recyclerView = view.findViewById(R.id.recyclerViewRestaurantes);
         adapter = new RestauranteAdapter(restaurantes);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(adapter);
+
+        adapter.setOnItemClickListener(restaurante -> {
+            // Crea un Bundle con la información del restaurante seleccionado
+            Bundle bundle = new Bundle();
+            bundle.putSerializable("restauranteSeleccionado", restaurante);
+
+            // Obtén el NavController desde el fragmento actual
+            NavController navController = NavHostFragment.findNavController(PrincipalFragment.this);
+
+            // Navega al MapaFragment usando el ID y pasando el Bundle
+            navController.navigate(R.id.nav_mapa, bundle);
+        });
 
         // Configuración del SearchView
         searchView = view.findViewById(R.id.txtBuscar);

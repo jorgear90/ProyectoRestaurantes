@@ -2,12 +2,10 @@ package com.android.proyectorestaurantes;
 
 import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RatingBar;
@@ -25,6 +23,7 @@ import com.android.proyectorestaurantes.entidades.Favoritos;
 import com.android.proyectorestaurantes.entidades.Opiniones;
 import com.android.proyectorestaurantes.entidades.Platillo;
 import com.android.proyectorestaurantes.entidades.Restaurante;
+import com.android.proyectorestaurantes.entidades.Servicios;
 import com.android.proyectorestaurantes.entidades.Usuario;
 
 import java.text.SimpleDateFormat;
@@ -40,6 +39,7 @@ public class RestauranteActivity extends AppCompatActivity {
     private RatingBar ratingBarRestaurante;
     private EditText etComentario;
     private Button btnHorario;
+    private Button btnServicios;
     private RecyclerView rvPlatillos;
     private PlatilloAdapter platilloAdapter;
     private RecyclerView rvOpiniones;
@@ -89,6 +89,7 @@ public class RestauranteActivity extends AppCompatActivity {
         ratingBarRestaurante = findViewById(R.id.ratingBarRestaurante);
         etComentario = findViewById(R.id.etComentario);
         btnHorario = findViewById(R.id.btnHorario);
+        btnServicios = findViewById(R.id.btnServicios);
 
         // Configuración del RecyclerView para platillos
         List<Platillo> platillosList = restaurante.getPlatillos();
@@ -112,6 +113,7 @@ public class RestauranteActivity extends AppCompatActivity {
             tvDireccionRestaurante.setText(restaurante.getDireccion());
 
             btnHorario.setOnClickListener(v -> mostrarHorario(restaurante.getHoraApertura(), restaurante.getHoraCierre()));
+            btnServicios.setOnClickListener(v -> mostrarServicios(restaurante.getServicios())); // Configuración del botón de servicios
 
             ratingBarRestaurante.setOnRatingBarChangeListener((ratingBar, rating, fromUser) ->
                     Toast.makeText(RestauranteActivity.this, "Has evaluado con " + rating + " estrellas", Toast.LENGTH_SHORT).show());
@@ -229,5 +231,29 @@ public class RestauranteActivity extends AppCompatActivity {
         builder.setMessage("Apertura: " + apertura + "\nCierre: " + cierre);
         builder.setPositiveButton("OK", (dialog, which) -> dialog.dismiss());
         builder.show();
+    }
+
+    private void mostrarServicios(List<Servicios> servicios) {
+        if (servicios == null || servicios.isEmpty()) {
+            Toast.makeText(this, "No hay servicios disponibles", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Convertimos la lista de objetos Servicios a una lista de strings
+        String[] serviciosArray = new String[servicios.size()];
+        for (int i = 0; i < servicios.size(); i++) {
+            serviciosArray[i] = servicios.get(i).toString(); // Llama a toString() o un método específico que obtenga el nombre
+        }
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Servicios del Restaurante");
+        builder.setItems(serviciosArray, (dialog, which) -> {
+            // Acción al seleccionar un servicio (opcional)
+            Toast.makeText(this, "Seleccionaste: " + serviciosArray[which], Toast.LENGTH_SHORT).show();
+        });
+        builder.setNegativeButton("Cerrar", (dialog, which) -> dialog.dismiss());
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 }

@@ -64,8 +64,6 @@
         </HorizontalScrollView>
 
         <!-- Botón Horario -->
-
-        <!-- Dirección del Restaurante -->
         <Button
             android:id="@+id/btnHorario"
             android:layout_width="wrap_content"
@@ -79,6 +77,20 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.433" />
 
+        <!-- Botón Servicios -->
+        <Button
+            android:id="@+id/btnServicios"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:text="Ver Servicios"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.52"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.432" />
+        <!-- Dirección del Restaurante -->
         <TextView
             android:id="@+id/tvDireccionRestaurante"
             android:layout_width="wrap_content"

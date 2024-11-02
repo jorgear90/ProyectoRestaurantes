@@ -21,6 +21,15 @@ public class RestauranteAdapter extends RecyclerView.Adapter<RestauranteAdapter.
     //Context context;
     ArrayList<Restaurante> restaurantes;
     ArrayList<Restaurante> listaOriginal;
+    private OnItemClickListener listener;
+
+    public interface OnItemClickListener {
+        void onItemClick(Restaurante restaurante);
+    }
+
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.listener = listener;
+    }
 
     public RestauranteAdapter(ArrayList<Restaurante> restaurantes) {
         this.restaurantes = restaurantes;
@@ -74,6 +83,8 @@ public class RestauranteAdapter extends RecyclerView.Adapter<RestauranteAdapter.
     @Override
     public void onBindViewHolder(@NonNull RestauranteViewHolder holder, int position) {
         holder.nombre.setText(restaurantes.get(position).getNombre());
+        Restaurante restaurante = restaurantes.get(position);
+        holder.bind(restaurante, listener);
     }
 
     @Override
@@ -92,6 +103,14 @@ public class RestauranteAdapter extends RecyclerView.Adapter<RestauranteAdapter.
         public RestauranteViewHolder(@NonNull View itemView) {
             super(itemView);
             nombre = itemView.findViewById(R.id.viewNombre);
+        }
+        public void bind(final Restaurante restaurante, final OnItemClickListener listener) {
+            // Configura las vistas y agrega el listener
+            itemView.setOnClickListener(v -> {
+                if (listener != null) {
+                    listener.onItemClick(restaurante);
+                }
+            });
         }
     }
 }

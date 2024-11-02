@@ -11,8 +11,6 @@ import android.widget.Button;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.NavController;
-import androidx.navigation.fragment.NavHostFragment;
 
 import com.android.proyectorestaurantes.R;
 import com.android.proyectorestaurantes.RestauranteActivity;
@@ -77,6 +75,25 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
         Bundle bundle = getArguments();
         ArrayList<Restaurante> restaurantesFiltrados;
 
+        // Obtener el restaurante del Bundle
+        if (bundle != null) {
+            Restaurante restauranteSeleccionado = (Restaurante) bundle.getSerializable("restauranteSeleccionado");
+
+            if (restauranteSeleccionado != null) {
+                // Obtener la ubicación del restaurante
+                LatLng ubicacion = new LatLng(restauranteSeleccionado.getLatitud(), restauranteSeleccionado.getLongitud());
+
+                // Añadir un marcador al mapa
+                googleMap.addMarker(new MarkerOptions()
+                        .position(ubicacion)
+                        .title(restauranteSeleccionado.getNombre())
+                        .snippet(restauranteSeleccionado.getDireccion()));
+
+                // Mover la cámara a la ubicación del restaurante
+                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(ubicacion, 15));
+            }
+        }
+
         // Verificar si el bundle no es null y contiene el serializable
         if (bundle != null) {
             restaurantesFiltrados = (ArrayList<Restaurante>) bundle.getSerializable("restaurantesFiltrados");
@@ -101,16 +118,29 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
             Log.e("MapaFragment", "No se encontraron restaurantes para mostrar.");
         }
         googleMap.setOnMarkerClickListener(marker -> {
-            for (Restaurante rest : restaurantesFiltrados) {
-                if (marker.getTitle().equals(rest.getNombre())) {
+            // Si restaurantesFiltrados es nulo o vacío, intenta usar restauranteSeleccionado
+            if (restaurantesFiltrados == null || restaurantesFiltrados.isEmpty()) {
+                Restaurante restauranteSeleccionado = (Restaurante) getArguments().getSerializable("restauranteSeleccionado");
+                if (restauranteSeleccionado != null && marker.getTitle().equals(restauranteSeleccionado.getNombre())) {
                     // Abrir RestauranteActivity con la información del restaurante seleccionado
                     Intent intent = new Intent(getActivity(), RestauranteActivity.class);
-                    intent.putExtra("restauranteSeleccionado", rest);
+                    intent.putExtra("restauranteSeleccionado", restauranteSeleccionado);
                     startActivity(intent);
-                    break;
+                    return true; // Indica que el evento fue manejado
+                }
+            } else {
+                // Verifica si el marcador coincide con un restaurante en la lista filtrada
+                for (Restaurante rest : restaurantesFiltrados) {
+                    if (marker.getTitle().equals(rest.getNombre())) {
+                        // Abrir RestauranteActivity con la información del restaurante seleccionado
+                        Intent intent = new Intent(getActivity(), RestauranteActivity.class);
+                        intent.putExtra("restauranteSeleccionado", rest);
+                        startActivity(intent);
+                        break;
+                    }
                 }
             }
-            return false;
+            return false; // Indica que el evento no fue manejado
         });
 
 

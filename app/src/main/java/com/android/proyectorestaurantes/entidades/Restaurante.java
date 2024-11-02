@@ -9,12 +9,14 @@ public class Restaurante implements Serializable {
     private String direccion;
     private String horaApertura;
     private String horaCierre;
+    private String ciudad;
     private double latitud;
     private double longitud;
     private double promedio;
     private List<Platillo> platillos;
+    private List<Servicios> servicios;
 
-    public Restaurante(Integer id, String nombre, String direccion, String horaApertura, String horaCierre, double latitud, double longitud, double promedio, List<Platillo> platillos) {
+    public Restaurante(Integer id, String nombre, String direccion, String horaApertura, String horaCierre, double latitud, double longitud, double promedio, List<Platillo> platillos, List<Servicios> servicios, String ciudad) {
         this.setId(id);
         this.setNombre(nombre);
         this.setDireccion(direccion);
@@ -24,6 +26,8 @@ public class Restaurante implements Serializable {
         this.setLongitud(longitud);
         this.setPromedio(promedio);
         this.setPlatillos(platillos);
+        this.setServicios(servicios);
+        this.setCiudad(ciudad);
     }
 
     public String getNombre() {
@@ -98,5 +102,21 @@ public class Restaurante implements Serializable {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public List<Servicios> getServicios() {
+        return servicios;
+    }
+
+    public void setServicios(List<Servicios> servicios) {
+        this.servicios = servicios;
+    }
+
+    public String getCiudad() {
+        return ciudad;
+    }
+
+    public void setCiudad(String ciudad) {
+        this.ciudad = ciudad;
     }
 }

@@ -32,6 +32,7 @@ public class PlatilloAdapter extends RecyclerView.Adapter<PlatilloAdapter.Platil
     public void onBindViewHolder(@NonNull PlatilloViewHolder holder, int position) {
         Platillo platillo = platillosList.get(position);
         holder.tvPlatillo.setText(platillo.getNombre());
+        holder.tvPrecio.setText(String.valueOf(platillo.getPrecio()));
     }
 
     @Override
@@ -41,10 +42,12 @@ public class PlatilloAdapter extends RecyclerView.Adapter<PlatilloAdapter.Platil
 
     public static class PlatilloViewHolder extends RecyclerView.ViewHolder {
         TextView tvPlatillo;
+        TextView tvPrecio;
 
         public PlatilloViewHolder(@NonNull View itemView) {
             super(itemView);
             tvPlatillo = itemView.findViewById(R.id.tvPlatillo);
+            tvPrecio = itemView.findViewById(R.id.tvPrecio);
         }
     }
 }
