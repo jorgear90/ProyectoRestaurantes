@@ -12,8 +12,9 @@ public class Favoritos implements Serializable {
     private String horaCierre;
     private double promedio;
     private List<Platillo> platillos;
+    private List<Servicios> servicios;
 
-    public Favoritos (String correoUsuario, int idRestaurante, String nombreRetaurante, String direccion, String horaApertura, String horaCierre, double promedio,List<Platillo> platillos){
+    public Favoritos (String correoUsuario, int idRestaurante, String nombreRetaurante, String direccion, String horaApertura, String horaCierre, double promedio,List<Platillo> platillos,List<Servicios> servicios){
         this.setCorreoUsuario(correoUsuario);
         this.setIdRestaurante(idRestaurante);
         this.setNombreRetaurante(nombreRetaurante);
@@ -22,6 +23,8 @@ public class Favoritos implements Serializable {
         this.setHoraCierre(horaCierre);
         this.setPromedio(promedio);
         this.setPlatillos(platillos);
+        this.setServicios(servicios);
+
     }
 
     public String getCorreoUsuario() {
@@ -86,5 +89,13 @@ public class Favoritos implements Serializable {
 
     public void setPlatillos(List<Platillo> platillos) {
         this.platillos = platillos;
+    }
+
+    public List<Servicios> getServicios() {
+        return servicios;
+    }
+
+    public void setServicios(List<Servicios> servicios) {
+        this.servicios = servicios;
     }
 }

@@ -24,12 +24,14 @@ import com.android.proyectorestaurantes.bd.BaseDatos;
 import com.android.proyectorestaurantes.entidades.Favoritos;
 import com.android.proyectorestaurantes.entidades.Platillo;
 import com.android.proyectorestaurantes.entidades.Restaurante;
+import com.android.proyectorestaurantes.entidades.Servicios;
 
 import java.util.List;
 
 public class FavoritosActivity extends AppCompatActivity {
     private TextView NombreRestaurante, NotaRestaurante, DireccionRestaurante;
     private Button btnHorario;
+    private Button btnServicios;
     private RecyclerView Platillos;
     private PlatilloAdapter platilloAdapter;
     private int restauranteId;
@@ -66,6 +68,8 @@ public class FavoritosActivity extends AppCompatActivity {
             NotaRestaurante = findViewById(R.id.favNotaRestaurante);
             DireccionRestaurante = findViewById(R.id.favDireccionRestaurante);
             btnHorario = findViewById(R.id.favbtnHorario);
+            btnServicios = findViewById(R.id.favbtnServicios);
+
 
             // Mostrar datos del favorito
             NombreRestaurante.setText(favorito.getNombreRetaurante());
@@ -82,6 +86,7 @@ public class FavoritosActivity extends AppCompatActivity {
 
             // Configura el botón de horario
             btnHorario.setOnClickListener(v -> mostrarHorario(favorito.getHoraApertura(), favorito.getHoraCierre()));
+            btnServicios.setOnClickListener(v -> mostrarServicios(favorito.getServicios()));
         } else {
             Log.e("FavoritosActivity", "El objeto favorito es null");
         }
@@ -145,7 +150,8 @@ public class FavoritosActivity extends AppCompatActivity {
                 restaurante.getHoraApertura(),
                 restaurante.getHoraCierre(),
                 restaurante.getPromedio(),
-                restaurante.getPlatillos()
+                restaurante.getPlatillos(),
+                restaurante.getServicios()
         );
         BaseDatos.favoritos.add(nuevoFavorito);
         Toast.makeText(this, "Restaurante agregado a favoritos", Toast.LENGTH_SHORT).show();
@@ -163,6 +169,30 @@ public class FavoritosActivity extends AppCompatActivity {
                 break;
             }
         }
+    }
+
+    private void mostrarServicios(List<Servicios> servicios) {
+        if (servicios == null || servicios.isEmpty()) {
+            Toast.makeText(this, "No hay servicios disponibles", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Convertimos la lista de objetos Servicios a una lista de strings
+        String[] serviciosArray = new String[servicios.size()];
+        for (int i = 0; i < servicios.size(); i++) {
+            serviciosArray[i] = servicios.get(i).toString(); // Llama a toString() o un método específico que obtenga el nombre
+        }
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Servicios del Restaurante");
+        builder.setItems(serviciosArray, (dialog, which) -> {
+            // Acción al seleccionar un servicio (opcional)
+            Toast.makeText(this, "Seleccionaste: " + serviciosArray[which], Toast.LENGTH_SHORT).show();
+        });
+        builder.setNegativeButton("Cerrar", (dialog, which) -> dialog.dismiss());
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
 }

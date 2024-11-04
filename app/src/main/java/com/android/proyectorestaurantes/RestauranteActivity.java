@@ -208,7 +208,8 @@ public class RestauranteActivity extends AppCompatActivity {
                 restaurante.getHoraApertura(),
                 restaurante.getHoraCierre(),
                 restaurante.getPromedio(),
-                restaurante.getPlatillos()
+                restaurante.getPlatillos(),
+                restaurante.getServicios()
         );
         BaseDatos.favoritos.add(nuevoFavorito);
         Toast.makeText(this, "Restaurante agregado a favoritos", Toast.LENGTH_SHORT).show();
