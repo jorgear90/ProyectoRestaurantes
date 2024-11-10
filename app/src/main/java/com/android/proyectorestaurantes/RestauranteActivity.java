@@ -1,11 +1,15 @@
 package com.android.proyectorestaurantes;
 
 import android.annotation.SuppressLint;
+import android.content.ContentValues;
 import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RatingBar;
@@ -47,12 +51,20 @@ public class RestauranteActivity extends AppCompatActivity {
     private int restauranteId;
     private Button btnFavoritos;
     private boolean esFavorito;
+    private DbHelper dbHelper;
+    private SQLiteDatabase db;
 
     @SuppressLint({"SetTextI18n", "MissingInflatedId"})
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_restaurante);
+
+        // Instanciar DbHelper
+        dbHelper = new DbHelper(this);
+
+        // Obtener una base de datos legible
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
 
         RatingBar ratingBar1 = findViewById(R.id.ratingBarRestaurante);
         Button btnEnviar = findViewById(R.id.btnEnviar);
@@ -74,7 +86,6 @@ public class RestauranteActivity extends AppCompatActivity {
 
         // Verificar si el restaurante está en favoritos
         esFavorito = verificarFavorito(userEmail, restauranteId);
-        //btnFavoritos.setBackgroundColor(esFavorito ? Color.BLACK : Color.WHITE);
 
         // Configurar el RecyclerView para opiniones
         rvOpiniones = findViewById(R.id.rvOpiniones);
@@ -191,39 +202,108 @@ public class RestauranteActivity extends AppCompatActivity {
     }
 
     private boolean verificarFavorito(String correoUsuario, int idRestaurante) {
-        for (Favoritos favorito : BaseDatos.favoritos) {
-            if (favorito.getCorreoUsuario().equals(correoUsuario) && favorito.getIdRestaurante() == idRestaurante) {
-                return true;
-            }
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        String query = "SELECT COUNT(*) FROM favoritos WHERE correoUsuario = ? AND idRestaurante = ?";
+        String[] selectionArgs = { correoUsuario, String.valueOf(idRestaurante) };
+
+        Cursor cursor = db.rawQuery(query, selectionArgs);
+        boolean existe = false;
+
+        if (cursor.moveToFirst()) {
+            int count = cursor.getInt(0);
+            existe = (count > 0);
         }
-        return false;
+
+        cursor.close();
+        db.close();
+
+        return existe;
     }
 
     private void agregarFavorito(String correoUsuario, Restaurante restaurante) {
-        Favoritos nuevoFavorito = new Favoritos(
-                correoUsuario,
-                restaurante.getId(),
-                restaurante.getNombre(),
-                restaurante.getDireccion(),
-                restaurante.getHoraApertura(),
-                restaurante.getHoraCierre(),
-                restaurante.getPromedio(),
-                restaurante.getPlatillos(),
-                restaurante.getServicios()
-        );
-        BaseDatos.favoritos.add(nuevoFavorito);
-        Toast.makeText(this, "Restaurante agregado a favoritos", Toast.LENGTH_SHORT).show();
+        dbHelper = new DbHelper(this);
+        db = dbHelper.getWritableDatabase();
+
+        // Datos del restaurante
+        String cu = correoUsuario;
+        Integer ir = restaurante.getId();
+        String nr = restaurante.getNombre();
+        String d = restaurante.getDireccion();
+        String ha = restaurante.getHoraApertura();
+        String hc = restaurante.getHoraCierre();
+        double p = restaurante.getPromedio();
+
+        // Insertar en la tabla "favoritos"
+        ContentValues registro = new ContentValues();
+        registro.put("correoUsuario", cu);
+        registro.put("idRestaurante", ir);
+        registro.put("nombreRestaurante", nr);
+        registro.put("direccion", d);
+        registro.put("horaApertura", ha);
+        registro.put("horaCierre", hc);
+        registro.put("promedio", p);
+
+        long favoritoId = db.insert("favoritos", null, registro);
+
+        // Verifica si se insertó correctamente en favoritos
+        if (favoritoId != -1) {
+            Log.e("respuesta", "si entro al IF");
+            // Insertar platillos asociados al favorito
+            for (Platillo platillo : restaurante.getPlatillos()) {
+                ContentValues platilloRegistro = new ContentValues();
+                platilloRegistro.put("favorito_Id", favoritoId);
+                platilloRegistro.put("nombre", platillo.getNombre());
+                platilloRegistro.put("precio", platillo.getPrecio());
+
+                db.insert("platillos", null, platilloRegistro);
+            }
+
+            // Insertar servicios asociados al favorito
+            for (Servicios servicio : restaurante.getServicios()) {
+                ContentValues servicioRegistro = new ContentValues();
+                servicioRegistro.put("favorito_Id", favoritoId);
+                servicioRegistro.put("nombre", servicio.getNombre());
+
+                db.insert("servicios", null, servicioRegistro);
+            }
+
+            Toast.makeText(this, "Restaurante agregado a favoritos", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, "Error al agregar a favoritos", Toast.LENGTH_SHORT).show();
+        }
+
+        db.close();
+
     }
 
     private void eliminarFavorito(String correoUsuario, int idRestaurante) {
-        for (int i = 0; i < BaseDatos.favoritos.size(); i++) {
-            Favoritos favorito = BaseDatos.favoritos.get(i);
-            if (favorito.getCorreoUsuario().equals(correoUsuario) && favorito.getIdRestaurante() == idRestaurante) {
-                BaseDatos.favoritos.remove(i);
-                Toast.makeText(this, "Restaurante eliminado de favoritos", Toast.LENGTH_SHORT).show();
-                break;
+        dbHelper = new DbHelper(this);
+        db = dbHelper.getWritableDatabase();
+
+        // Consulta para obtener el id del favorito que se va a eliminar
+        String query = "SELECT id FROM favoritos WHERE correoUsuario = ? AND idRestaurante = ?";
+        Cursor cursor = db.rawQuery(query, new String[]{correoUsuario, String.valueOf(idRestaurante)});
+
+        if (cursor.moveToFirst()) {
+            // Si el favorito existe, obtenemos su id
+            @SuppressLint("Range") int favoritoId = cursor.getInt(cursor.getColumnIndex("id"));
+
+            // Elimina los registros en "platillos" y "servicios" asociados a este favorito
+            db.delete("platillos", "favorito_id=?", new String[]{String.valueOf(favoritoId)});
+            db.delete("servicios", "favorito_id=?", new String[]{String.valueOf(favoritoId)});
+
+            // Elimina el registro en "favoritos"
+            int cantidad_filas = db.delete("favoritos", "id=?", new String[]{String.valueOf(favoritoId)});
+
+            if (cantidad_filas == 1) {
+                Toast.makeText(getApplicationContext(), "Restaurante eliminado de favoritos", Toast.LENGTH_LONG).show();
             }
+        } else {
+            Toast.makeText(getApplicationContext(), "No se encontró el restaurante en favoritos", Toast.LENGTH_LONG).show();
         }
+
+        cursor.close();
+        db.close();
     }
 
     private void mostrarHorario(String apertura, String cierre) {

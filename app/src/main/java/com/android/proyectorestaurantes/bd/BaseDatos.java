@@ -33,7 +33,7 @@ public class BaseDatos {
     }
 
     // Lista estática para que sea accesible desde otras clases
-    public static ArrayList<Favoritos> favoritos = new ArrayList<>();
+    //public static ArrayList<Favoritos> favoritos = new ArrayList<>();
 
     // Método para inicializar opiniones (simulado)
     private static ArrayList<Opiniones> obtenerOpinionesIniciales() {
