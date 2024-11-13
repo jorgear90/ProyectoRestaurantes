@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "738703084200",
+    "firebase_url": "https://restaurantes-8b093-default-rtdb.firebaseio.com",
+    "project_id": "restaurantes-8b093",
+    "storage_bucket": "restaurantes-8b093.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:738703084200:android:7eee47abd1efd2481b909d",
+        "android_client_info": {
+          "package_name": "com.android.proyectorestaurantes"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDuQPe6HURpnrDiMaTZBF3ZnwwhsmhneDE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

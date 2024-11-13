@@ -1,5 +1,7 @@
 plugins {
-    alias(libs.plugins.android.application)
+    //alias(libs.plugins.android.application)
+    id("com.android.application")
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -47,7 +49,10 @@ dependencies {
     implementation(libs.legacy.support.v4)
     implementation("com.google.android.gms:play-services-maps:19.0.0")
     implementation(libs.play.services.maps)
+    implementation(platform("com.google.firebase:firebase-bom:33.5.1"))
+    implementation("com.google.firebase:firebase-analytics")
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
+
 }
