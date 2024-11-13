@@ -1,6 +1,7 @@
 package com.android.proyectorestaurantes.ui.principal;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,7 +10,6 @@ import android.widget.SearchView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -21,10 +21,15 @@ import com.android.proyectorestaurantes.adaptadores.RestauranteAdapter;
 import com.android.proyectorestaurantes.entidades.Platillo;
 import com.android.proyectorestaurantes.entidades.Restaurante;
 import com.android.proyectorestaurantes.entidades.Servicios;
-import com.android.proyectorestaurantes.ui.mapa.MapaFragment;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class PrincipalFragment extends Fragment {
 
@@ -33,17 +38,97 @@ public class PrincipalFragment extends Fragment {
     private ArrayList<Restaurante> restaurantes;
     private SearchView searchView;
 
+    // Referencia a la base de datos
+    DatabaseReference databaseRef = FirebaseDatabase.getInstance().getReference();
+
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_principal, container, false);
 
-
-
         // Inicialización de la lista de restaurantes
         restaurantes = new ArrayList<>();
-        // Llena la lista con restaurantes
+
+        // Listener para los restaurantes
+        databaseRef.child("Restaurantes").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot restauranteSnapshot : snapshot.getChildren()) {
+                    // Obtén el ID y los datos del restaurante
+                    String id = restauranteSnapshot.getKey();
+                    String nombre = restauranteSnapshot.child("nombre").getValue(String.class);
+                    String direccion = restauranteSnapshot.child("direccion").getValue(String.class);
+                    String horaApertura = restauranteSnapshot.child("horaApertura").getValue(String.class);
+                    String horaCierre = restauranteSnapshot.child("horaCierre").getValue(String.class);
+                    String ciudad = restauranteSnapshot.child("ciudad").getValue(String.class);
+                    double latitud = restauranteSnapshot.child("latitud").getValue(Double.class);
+                    double longitud = restauranteSnapshot.child("longitud").getValue(Double.class);
+                    double promedio = restauranteSnapshot.child("promedio").getValue(Double.class);
+
+                    // Inicializa las listas de platillos y servicios
+                    List<Platillo> platillos = new ArrayList<>();
+                    List<Servicios> servicios = new ArrayList<>();
+
+                    // Crea el objeto Restaurante
+                    Restaurante restaurante = new Restaurante(id, nombre, direccion, horaApertura, horaCierre, latitud, longitud, promedio, platillos, servicios, ciudad);
+
+
+                    // Obtén los platillos correspondientes
+                    databaseRef.child("Platillos").orderByChild("idRestaurante").equalTo(nombre)
+                            .addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot platilloSnapshot) {
+                                    for (DataSnapshot platilloData : platilloSnapshot.getChildren()) {
+                                        String nombrePlatillo = platilloData.child("nombre").getValue(String.class);
+                                        int precio = platilloData.child("precio").getValue(Integer.class);
+                                        platillos.add(new Platillo(nombrePlatillo, precio));
+                                    }
+                                    // Agrega los platillos al restaurante
+                                    restaurante.setPlatillos(platillos);
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+
+                                }
+
+                            });
+
+                    // Obtén los servicios correspondientes
+                    databaseRef.child("Servicios").orderByChild("idRestaurante").equalTo(nombre)
+                            .addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot servicioSnapshot) {
+                                    for (DataSnapshot servicioData : servicioSnapshot.getChildren()) {
+                                        String nombreServicio = servicioData.child("nombre").getValue(String.class);
+                                        servicios.add(new Servicios(nombreServicio));
+                                    }
+                                    // Agrega los servicios al restaurante
+                                    restaurante.setServicios(servicios);
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+                                    // Manejo de error
+                                }
+                            });
+
+                    // Agrega el restaurante al ArrayList después de obtener todos sus datos
+                    restaurantes.add(restaurante);
+
+                    Log.e("resouesta", String.valueOf(restaurantes.size()));
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                // Manejo de error
+            }
+        });
+
+
+        /*/ Llena la lista con restaurantes
         List<Servicios> servicios1 = new ArrayList<>();
         servicios1.add(new Servicios("Estacionamiento"));
         servicios1.add(new Servicios("Para llevar"));
@@ -61,7 +146,7 @@ public class PrincipalFragment extends Fragment {
         platillos2.add(new Platillo("Sushi",15000));
         platillos2.add(new Platillo("Ramen",12000));
         restaurantes.add(new Restaurante(2,"Restaurante Japonés", "Avenida Siempre Viva 456", "12:00", "23:00", -29.87495986587249, -71.24276660770154, 4.7, platillos2,servicios2,"La Serena"));
-
+        */
         // Configuración del RecyclerView y el Adapter
         recyclerView = view.findViewById(R.id.recyclerViewRestaurantes);
         adapter = new RestauranteAdapter(restaurantes);

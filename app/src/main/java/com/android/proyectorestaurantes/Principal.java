@@ -39,6 +39,7 @@ public class Principal extends AppCompatActivity implements NavigationView.OnNav
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+
         binding = ActivityPrincipalBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 

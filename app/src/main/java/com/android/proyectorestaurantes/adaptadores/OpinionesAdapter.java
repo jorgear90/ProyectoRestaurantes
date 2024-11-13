@@ -19,10 +19,10 @@ public class OpinionesAdapter extends RecyclerView.Adapter<OpinionesAdapter.Opin
 
     private ArrayList<Opiniones> opinionesList;
     private ArrayList<Usuario> usuariosList;// Para obtener el correo del usuario basado en idUsuario
-    private Integer idRes;
+    private String idRes;
     private ArrayList<Opiniones> opinionesFiltradas;
 
-    public OpinionesAdapter(ArrayList<Opiniones> opinionesList, ArrayList<Usuario> usuariosList, int idRes) {
+    public OpinionesAdapter(ArrayList<Opiniones> opinionesList, ArrayList<Usuario> usuariosList, String idRes) {
         this.opinionesList = opinionesList;
         this.usuariosList = usuariosList;
         this.idRes = idRes;

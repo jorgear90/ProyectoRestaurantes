@@ -38,8 +38,8 @@ public class BaseDatos {
     // Método para inicializar opiniones (simulado)
     private static ArrayList<Opiniones> obtenerOpinionesIniciales() {
         ArrayList<Opiniones> opiniones = new ArrayList<>();
-        opiniones.add(new Opiniones(1, "usuario1@example.com", 1, 4.5f, "Excelente comida", "2023-10-01"));
-        opiniones.add(new Opiniones(2, "usuario2@example.com", 2, 3.5f, "Buen servicio", "2023-10-02"));
+        opiniones.add(new Opiniones(1, "usuario1@example.com", "1", 4.5f, "Excelente comida", "2023-10-01"));
+        opiniones.add(new Opiniones(2, "usuario2@example.com", "2", 3.5f, "Buen servicio", "2023-10-02"));
         return opiniones;
     }
 

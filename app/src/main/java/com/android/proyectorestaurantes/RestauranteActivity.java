@@ -48,7 +48,7 @@ public class RestauranteActivity extends AppCompatActivity {
     private PlatilloAdapter platilloAdapter;
     private RecyclerView rvOpiniones;
     private OpinionesAdapter opinionesAdapter;
-    private int restauranteId;
+    private String restauranteId;
     private Button btnFavoritos;
     private boolean esFavorito;
     private DbHelper dbHelper;
@@ -85,7 +85,7 @@ public class RestauranteActivity extends AppCompatActivity {
         String userEmail = obtenerUserEmail();
 
         // Verificar si el restaurante está en favoritos
-        esFavorito = verificarFavorito(userEmail, restauranteId);
+        esFavorito = verificarFavorito(userEmail, Integer.parseInt(restauranteId));
 
         // Configurar el RecyclerView para opiniones
         rvOpiniones = findViewById(R.id.rvOpiniones);
@@ -134,7 +134,7 @@ public class RestauranteActivity extends AppCompatActivity {
 
             if (esFavorito) {
                 // Si ya es favorito, lo elimina
-                eliminarFavorito(userEmail, restauranteId);
+                eliminarFavorito(userEmail, Integer.parseInt(restauranteId));
                 btnFavoritos.setBackgroundColor(Color.WHITE);
                 btnFavoritos.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.btn_star_off_black, 0); // ícono negro
             } else {
@@ -186,7 +186,7 @@ public class RestauranteActivity extends AppCompatActivity {
         });
     }
 
-    private ArrayList<Opiniones> obtenerOpinionesPorId(int idRes) {
+    private ArrayList<Opiniones> obtenerOpinionesPorId(String idRes) {
         ArrayList<Opiniones> opinionesFiltradas = new ArrayList<>();
         for (Opiniones opinion : BaseDatos.opinionesList) {
             if (opinion.getIdRestaurante() == idRes && !opinionesFiltradas.contains(opinion)) {
@@ -226,7 +226,7 @@ public class RestauranteActivity extends AppCompatActivity {
 
         // Datos del restaurante
         String cu = correoUsuario;
-        Integer ir = restaurante.getId();
+        String ir = restaurante.getId();
         String nr = restaurante.getNombre();
         String d = restaurante.getDireccion();
         String ha = restaurante.getHoraApertura();
