@@ -1,29 +1,20 @@
 package com.android.proyectorestaurantes.entidades;
 
 public class Opiniones {
-    private Integer id;
+    private String id;
     private String correoUsuario;
     private String idRestaurante;
     private float puntuacion;
     private String comentario;
     private String fecha;
 
-    public Opiniones(int id, String correoUsuario, String idRestaurante, float puntuacion, String comentario, String fecha) {
-        this.id = id;
+    public Opiniones(String id, String correoUsuario, String idRestaurante, float puntuacion, String comentario, String fecha) {
+        this.setId(id);
         this.setCorreoUsuario(correoUsuario);
         this.setIdRestaurante(idRestaurante);
         this.puntuacion = puntuacion;
         this.comentario = comentario;
         this.fecha = fecha;
-    }
-
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
     }
 
     public float getPuntuacion() {
@@ -64,5 +55,13 @@ public class Opiniones {
 
     public void setIdRestaurante(String idRestaurante) {
         this.idRestaurante = idRestaurante;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }

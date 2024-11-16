@@ -7,8 +7,10 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.os.Handler;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
@@ -29,8 +31,11 @@ import com.android.proyectorestaurantes.entidades.Platillo;
 import com.android.proyectorestaurantes.entidades.Restaurante;
 import com.android.proyectorestaurantes.entidades.Servicios;
 import com.android.proyectorestaurantes.entidades.Usuario;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -83,7 +88,7 @@ public class RestauranteActivity extends AppCompatActivity {
         ArrayList<Opiniones> opinionesList = BaseDatos.opinionesList;
         ArrayList<Usuario> usuariosList = BaseDatos.usuariosList;
 
-        Log.e("respuesta", restaurante.getId());
+        Log.e("respuesta", String.valueOf(opinionesList.size()));
 
         // Filtramos opiniones para el restaurante actual
         ArrayList<Opiniones> opinionesFiltradas = obtenerOpinionesPorId(restauranteId);
@@ -99,6 +104,9 @@ public class RestauranteActivity extends AppCompatActivity {
         rvOpiniones.setLayoutManager(new LinearLayoutManager(this));
         opinionesAdapter = new OpinionesAdapter(opinionesFiltradas, usuariosList, restaurante.getId());
         rvOpiniones.setAdapter(opinionesAdapter);
+
+        // Actualizar dinámicamente las opiniones
+        actualizarOpinionesDinamicamente(opinionesFiltradas);
 
         // Configuración de elementos del layout
         tvNombreRestaurante = findViewById(R.id.tvNombreRestaurante);
@@ -167,19 +175,56 @@ public class RestauranteActivity extends AppCompatActivity {
 
             boolean opinionExistente = false;
             for (Opiniones opinion : opinionesList) {
-                if (opinion.getCorreoUsuario().equals(userEmail) && opinion.getIdRestaurante() == restauranteId) {
+                if (opinion.getCorreoUsuario().equals(userEmail) && opinion.getIdRestaurante().equals(restauranteId)) {
+                    // Actualizar los valores en la lista local
                     opinion.setPuntuacion(puntuacion);
                     opinion.setComentario(comentario);
                     opinion.setFecha(fechaActual);
                     opinionExistente = true;
                     opinionesAdapter.notifyDataSetChanged();
                     Toast.makeText(RestauranteActivity.this, "Opinión actualizada", Toast.LENGTH_SHORT).show();
-                    break;
+
+                    // Actualizar los valores en Firebase
+                    DatabaseReference opinionesRef = FirebaseDatabase.getInstance().getReference("Opiniones");
+
+                    opinionesRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            for (DataSnapshot opinionSnapshot : snapshot.getChildren()) {
+                                String dbCorreoUsuario = opinionSnapshot.child("email").getValue(String.class);
+                                String dbRestauranteId = opinionSnapshot.child("restauranteId").getValue(String.class);
+
+                                if (dbCorreoUsuario == null) {
+                                    Log.e("Depuración", "correoUsuario es nulo en opinión ID: " + opinionSnapshot.getKey());
+                                }
+                                if (dbRestauranteId == null) {
+                                    Log.e("Depuración", "idRestaurante es nulo en opinión ID: " + opinionSnapshot.getKey());
+                                }
+
+                                if (dbCorreoUsuario != null && dbCorreoUsuario.equals(userEmail) &&
+                                        dbRestauranteId != null && dbRestauranteId.equals(restauranteId)) {
+                                    Log.e("respuesta", "ENTRO EN EL IF");
+                                    // Actualizar los campos
+                                    opinionSnapshot.getRef().child("puntuacion").setValue(puntuacion);
+                                    opinionSnapshot.getRef().child("comentario").setValue(comentario);
+                                    opinionSnapshot.getRef().child("fecha").setValue(fechaActual);
+                                    break; // Salir del bucle después de encontrar el nodo correcto
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+                            Toast.makeText(RestauranteActivity.this, "Error al actualizar Firebase", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
+                    break; // Salir del bucle después de encontrar la opinión
                 }
             }
 
             if (!opinionExistente) {
-                int nuevoId = opinionesList.size() + 1;
+                String nuevoId = String.valueOf(opinionesList.size() + 1);
 
                 // Crear objeto de tipo Opiniones
                 Opiniones nuevaOpinion = new Opiniones(nuevoId, userEmail, restauranteId, puntuacion, comentario, fechaActual);
@@ -216,7 +261,7 @@ public class RestauranteActivity extends AppCompatActivity {
     private ArrayList<Opiniones> obtenerOpinionesPorId(String idRes) {
         ArrayList<Opiniones> opinionesFiltradas = new ArrayList<>();
         for (Opiniones opinion : BaseDatos.opinionesList) {
-            if (opinion.getIdRestaurante() == idRes && !opinionesFiltradas.contains(opinion)) {
+            if (opinion.getIdRestaurante().equals(idRes) && !opinionesFiltradas.contains(opinion)) {
                 opinionesFiltradas.add(opinion);
             }
         }
@@ -363,5 +408,23 @@ public class RestauranteActivity extends AppCompatActivity {
 
         AlertDialog dialog = builder.create();
         dialog.show();
+    }
+
+    private void actualizarOpinionesDinamicamente(ArrayList<Opiniones> opinionesFiltradas) {
+        Handler handler = new Handler();
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                ArrayList<Opiniones> nuevasOpiniones = obtenerOpinionesPorId(restauranteId);
+                if (!nuevasOpiniones.equals(opinionesFiltradas)) {
+                    opinionesFiltradas.clear();
+                    opinionesFiltradas.addAll(nuevasOpiniones);
+                    runOnUiThread(() -> opinionesAdapter.notifyDataSetChanged());
+                }
+                // Repite el chequeo cada 2 segundos
+                handler.postDelayed(this, 2000);
+            }
+        };
+        handler.post(runnable);
     }
 }
