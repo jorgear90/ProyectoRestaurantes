@@ -29,12 +29,17 @@ import com.android.proyectorestaurantes.entidades.Platillo;
 import com.android.proyectorestaurantes.entidades.Restaurante;
 import com.android.proyectorestaurantes.entidades.Servicios;
 import com.android.proyectorestaurantes.entidades.Usuario;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+
 import android.graphics.Color;
 
 public class RestauranteActivity extends AppCompatActivity {
@@ -77,6 +82,8 @@ public class RestauranteActivity extends AppCompatActivity {
         // Inicializamos las listas de opiniones y usuarios desde BaseDatos
         ArrayList<Opiniones> opinionesList = BaseDatos.opinionesList;
         ArrayList<Usuario> usuariosList = BaseDatos.usuariosList;
+
+        Log.e("respuesta", restaurante.getId());
 
         // Filtramos opiniones para el restaurante actual
         ArrayList<Opiniones> opinionesFiltradas = obtenerOpinionesPorId(restauranteId);
@@ -173,12 +180,32 @@ public class RestauranteActivity extends AppCompatActivity {
 
             if (!opinionExistente) {
                 int nuevoId = opinionesList.size() + 1;
+
+                // Crear objeto de tipo Opiniones
                 Opiniones nuevaOpinion = new Opiniones(nuevoId, userEmail, restauranteId, puntuacion, comentario, fechaActual);
                 opinionesList.add(nuevaOpinion);
                 opinionesFiltradas.add(nuevaOpinion);
                 opinionesAdapter.notifyItemInserted(opinionesFiltradas.size() - 1);
 
-                Toast.makeText(RestauranteActivity.this, "Opinión agregada", Toast.LENGTH_SHORT).show();
+                // Crear referencia a Firebase
+                DatabaseReference databaseRef = FirebaseDatabase.getInstance().getReference("Opiniones");
+
+                // Estructura para Firebase
+                Map<String, Object> opinionMap = new HashMap<>();
+                opinionMap.put("email", userEmail);
+                opinionMap.put("restauranteId", restauranteId);
+                opinionMap.put("puntuacion", puntuacion);
+                opinionMap.put("comentario", comentario);
+                opinionMap.put("fecha", fechaActual);
+
+                // Subir datos a Firebase
+                databaseRef.child(String.valueOf(nuevoId)).setValue(opinionMap)
+                        .addOnSuccessListener(aVoid -> {
+                            Toast.makeText(RestauranteActivity.this, "Opinión agregada a Firebase", Toast.LENGTH_SHORT).show();
+                        })
+                        .addOnFailureListener(e -> {
+                            Toast.makeText(RestauranteActivity.this, "Error al guardar en Firebase: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        });
             }
 
             etComentario.setText("");

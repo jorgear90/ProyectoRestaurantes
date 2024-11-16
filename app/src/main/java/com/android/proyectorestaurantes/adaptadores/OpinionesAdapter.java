@@ -10,7 +10,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.proyectorestaurantes.R;
 import com.android.proyectorestaurantes.entidades.Opiniones;
-import com.android.proyectorestaurantes.entidades.Restaurante;
 import com.android.proyectorestaurantes.entidades.Usuario;
 
 import java.util.ArrayList;
