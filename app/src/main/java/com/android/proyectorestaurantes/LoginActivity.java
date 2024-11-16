@@ -9,7 +9,15 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import java.util.ArrayList;
 
 public class LoginActivity extends AppCompatActivity {
@@ -21,6 +29,7 @@ public class LoginActivity extends AppCompatActivity {
     private static final String PREFS_NAME = "MyAppPrefs";
     private static final String KEY_USER_EMAIL = "userEmail";
 
+    private DatabaseReference databaseRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +41,8 @@ public class LoginActivity extends AppCompatActivity {
         btnLogin = findViewById(R.id.btn_login);
         tvRegister = findViewById(R.id.tv_register);
 
+        // Inicializar Firebase Database referencia a la tabla "Usuario"
+        databaseRef = FirebaseDatabase.getInstance().getReference("Usuario");
 
         // Obtener la lista de usuarios del intent
         users = (ArrayList<User>) getIntent().getSerializableExtra("users");
@@ -45,22 +56,10 @@ public class LoginActivity extends AppCompatActivity {
                 String email = etLoginEmail.getText().toString().trim();
                 String password = etLoginPassword.getText().toString().trim();
 
-
-                if (isValidLogin(email, password)) {
-                    guardarUserEmail(email);
-                    Toast.makeText(LoginActivity.this, "Inicio de sesión exitoso", Toast.LENGTH_SHORT).show();
-
-                    // Obtener el nombre del usuario logueado
-                    String userName = getUserName(email);
-
-                    // Redirigir a Principal.java después de un inicio de sesión exitoso
-                    Intent intent = new Intent(LoginActivity.this, Principal.class);
-                    intent.putExtra("userEmail", email);
-                    intent.putExtra("userName", userName);  // Pasar el nombre del usuario también
-                    startActivity(intent);
-                    finish();  // Cerrar la actividad de inicio de sesión
+                if (!email.isEmpty() && !password.isEmpty()) {
+                    validarCredenciales(email, password);
                 } else {
-                    Toast.makeText(LoginActivity.this, "Credenciales inválidas", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginActivity.this, "Por favor completa todos los campos", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -71,6 +70,43 @@ public class LoginActivity extends AppCompatActivity {
                 Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
                 intent.putExtra("users", users);  // Pasar la lista de usuarios
                 startActivity(intent);
+            }
+        });
+    }
+
+    private void validarCredenciales(String email, String password) {
+        databaseRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                boolean isValid = false;
+
+                for (DataSnapshot userSnapshot : snapshot.getChildren()) {
+                    String dbEmail = userSnapshot.child("email").getValue(String.class);
+                    String dbPassword = userSnapshot.child("password").getValue(String.class);
+
+                    if (dbEmail != null && dbPassword != null && dbEmail.equals(email) && dbPassword.equals(password)) {
+                        isValid = true;
+                        break;
+                    }
+                }
+
+                if (isValid) {
+                    guardarUserEmail(email);
+                    Toast.makeText(LoginActivity.this, "Inicio de sesión exitoso", Toast.LENGTH_SHORT).show();
+
+                    // Redirigir a Principal.java después de un inicio de sesión exitoso
+                    Intent intent = new Intent(LoginActivity.this, Principal.class);
+                    intent.putExtra("userEmail", email);
+                    startActivity(intent);
+                    finish();
+                } else {
+                    Toast.makeText(LoginActivity.this, "Credenciales inválidas", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                Toast.makeText(LoginActivity.this, "Error al conectar con la base de datos", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -92,18 +128,20 @@ public class LoginActivity extends AppCompatActivity {
         }
         return "";
     }
+
     private void guardarUserEmail(String email) {
         SharedPreferences prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);  // Usar la constante PREFS_NAME aquí
         SharedPreferences.Editor editor = prefs.edit();
         editor.putString(KEY_USER_EMAIL, email);
         editor.apply();
     }
+
     public static String obtenerUserEmail(Context context) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
         return sharedPreferences.getString(KEY_USER_EMAIL, null);
     }
-
 }
+
 
 
 
