@@ -9,11 +9,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.ProyectoRestaurantes">
+
         <activity
             android:name=".FavoritosActivity"
-            android:exported="false" />
-        <activity
-            android:name=".Principal"
             android:exported="false" />
         <activity
             android:name=".RestauranteActivity"
@@ -24,19 +22,24 @@
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyBfI7olBIgKHxXNAu8YDgoY8Li5ZSZaqUE" /> <!-- Hacer que LoginActivity sea la actividad inicial -->
+            android:value="AIzaSyBfI7olBIgKHxXNAu8YDgoY8Li5ZSZaqUE" />
+
         <activity
             android:name=".LoginActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+            android:exported="true" />
         <activity
             android:name=".MainActivity"
             android:exported="true" />
+
+        <!-- Hacer que Principal sea la actividad inicial -->
+        <activity
+            android:name=".Principal"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>
