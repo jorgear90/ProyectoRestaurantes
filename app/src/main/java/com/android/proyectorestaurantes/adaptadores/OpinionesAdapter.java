@@ -40,7 +40,7 @@ public class OpinionesAdapter extends RecyclerView.Adapter<OpinionesAdapter.Opin
         Opiniones opinion = opinionesList.get(position);
 
         for(Opiniones opiniones : opinionesList){
-            if(idRes == opiniones.getIdRestaurante()){
+            if(opiniones.getIdRestaurante().equals(idRes)){
                 holder.tvFecha.setText(opinion.getFecha());
                 holder.tvComentario.setText(opinion.getComentario());
                 holder.ratingBar.setRating(opinion.getPuntuacion());
