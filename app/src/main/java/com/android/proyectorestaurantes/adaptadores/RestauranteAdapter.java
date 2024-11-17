@@ -83,6 +83,8 @@ public class RestauranteAdapter extends RecyclerView.Adapter<RestauranteAdapter.
     @Override
     public void onBindViewHolder(@NonNull RestauranteViewHolder holder, int position) {
         holder.nombre.setText(restaurantes.get(position).getNombre());
+        holder.direccion.setText(restaurantes.get(position).getDireccion());
+        holder.ciudad.setText(restaurantes.get(position).getCiudad());
         Restaurante restaurante = restaurantes.get(position);
         holder.bind(restaurante, listener);
     }
@@ -99,10 +101,14 @@ public class RestauranteAdapter extends RecyclerView.Adapter<RestauranteAdapter.
 
     public class RestauranteViewHolder extends RecyclerView.ViewHolder {
         TextView nombre;
+        TextView direccion;
+        TextView ciudad;
 
         public RestauranteViewHolder(@NonNull View itemView) {
             super(itemView);
             nombre = itemView.findViewById(R.id.viewNombre);
+            direccion = itemView.findViewById(R.id.viewDireccion);
+            ciudad = itemView.findViewById(R.id.viewCiudad);
         }
         public void bind(final Restaurante restaurante, final OnItemClickListener listener) {
             // Configura las vistas y agrega el listener
