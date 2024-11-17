@@ -302,6 +302,7 @@ public class RestauranteActivity extends AppCompatActivity {
         String ir = restaurante.getId();
         String nr = restaurante.getNombre();
         String d = restaurante.getDireccion();
+        String c = restaurante.getCiudad();
         String ha = restaurante.getHoraApertura();
         String hc = restaurante.getHoraCierre();
         double p = restaurante.getPromedio();
@@ -312,6 +313,7 @@ public class RestauranteActivity extends AppCompatActivity {
         registro.put("idRestaurante", ir);
         registro.put("nombreRestaurante", nr);
         registro.put("direccion", d);
+        registro.put("ciudad",c);
         registro.put("horaApertura", ha);
         registro.put("horaCierre", hc);
         registro.put("promedio", p);

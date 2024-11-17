@@ -10,17 +10,19 @@ public class Favoritos implements Serializable {
     private String direccion;
     private String horaApertura;
     private String horaCierre;
+    private String ciudad;
     private double promedio;
     private List<Platillo> platillos;
     private List<Servicios> servicios;
 
-    public Favoritos (String correoUsuario, int idRestaurante, String nombreRetaurante, String direccion, String horaApertura, String horaCierre, double promedio,List<Platillo> platillos,List<Servicios> servicios){
+    public Favoritos (String correoUsuario, int idRestaurante, String nombreRetaurante, String direccion, String horaApertura, String horaCierre, String ciudad, double promedio,List<Platillo> platillos,List<Servicios> servicios){
         this.setCorreoUsuario(correoUsuario);
         this.setIdRestaurante(idRestaurante);
         this.setNombreRetaurante(nombreRetaurante);
         this.setDireccion(direccion);
         this.setHoraApertura(horaApertura);
         this.setHoraCierre(horaCierre);
+        this.setCiudad(ciudad);
         this.setPromedio(promedio);
         this.setPlatillos(platillos);
         this.setServicios(servicios);
@@ -97,5 +99,13 @@ public class Favoritos implements Serializable {
 
     public void setServicios(List<Servicios> servicios) {
         this.servicios = servicios;
+    }
+
+    public String getCiudad() {
+        return ciudad;
+    }
+
+    public void setCiudad(String ciudad) {
+        this.ciudad = ciudad;
     }
 }

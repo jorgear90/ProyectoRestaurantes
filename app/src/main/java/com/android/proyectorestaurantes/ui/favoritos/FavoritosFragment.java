@@ -110,6 +110,7 @@ public class FavoritosFragment extends Fragment {
                 @SuppressLint("Range") String direccion = cursorFavoritos.getString(cursorFavoritos.getColumnIndex("direccion"));
                 @SuppressLint("Range") String horaApertura = cursorFavoritos.getString(cursorFavoritos.getColumnIndex("horaApertura"));
                 @SuppressLint("Range") String horaCierre = cursorFavoritos.getString(cursorFavoritos.getColumnIndex("horaCierre"));
+                @SuppressLint("Range") String ciudad = cursorFavoritos.getString(cursorFavoritos.getColumnIndex("ciudad"));
                 @SuppressLint("Range") double promedio = cursorFavoritos.getDouble(cursorFavoritos.getColumnIndex("promedio"));
 
                 // Crear lista de platillos para este favorito
@@ -138,7 +139,7 @@ public class FavoritosFragment extends Fragment {
                 cursorServicios.close();
 
                 // Crear objeto Favoritos y añadirlo a la lista
-                Favoritos favorito = new Favoritos(correoUsuario, idRestaurante, nombreRestaurante, direccion, horaApertura, horaCierre, promedio, platillos, servicios);
+                Favoritos favorito = new Favoritos(correoUsuario, idRestaurante, nombreRestaurante, direccion, horaApertura, horaCierre,ciudad , promedio, platillos, servicios);
                 favoritosUsuario.add(favorito);
 
             } while (cursorFavoritos.moveToNext());
