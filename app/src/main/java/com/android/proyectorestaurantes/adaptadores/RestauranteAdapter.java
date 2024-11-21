@@ -33,8 +33,10 @@ public class RestauranteAdapter extends RecyclerView.Adapter<RestauranteAdapter.
 
     public RestauranteAdapter(ArrayList<Restaurante> restaurantes) {
         this.restaurantes = restaurantes;
-        listaOriginal = new ArrayList<>();
-        listaOriginal.addAll(restaurantes);
+        this.listaOriginal = new ArrayList<>(restaurantes); // Inicializa la lista original
+        //listaOriginal = new ArrayList<>();
+        //listaOriginal.addAll(restaurantes);
+
     }
 
     public ArrayList<Restaurante> getListaOriginal() {
@@ -43,14 +45,34 @@ public class RestauranteAdapter extends RecyclerView.Adapter<RestauranteAdapter.
 
     // Método para setear (actualizar) la lista de restaurantes
     public void setRestaurantes(ArrayList<Restaurante> nuevosRestaurantes) {
-        this.restaurantes.clear();
-        this.restaurantes.addAll(nuevosRestaurantes);
+        // Si nuevosRestaurantes está vacío, lo llenamos con los valores iniciales
+        if (nuevosRestaurantes == null || nuevosRestaurantes.isEmpty()) {
+            nuevosRestaurantes = new ArrayList<>(listaOriginal);
+            Log.e("la lista", "entro en el IF");
+        }
+        else{
+            // Asigna directamente la lista nueva
+            this.restaurantes = nuevosRestaurantes;
+            Log.e("la lista", "entro en el ELSE");
+        }
 
-        // Actualiza también la lista original
+
+        // Actualiza también la lista original (siempre que corresponda)
         this.listaOriginal.clear();
-        this.listaOriginal.addAll(nuevosRestaurantes);
+        this.listaOriginal = new ArrayList<>(nuevosRestaurantes); // Actualiza la lista original
 
-        notifyDataSetChanged();  // Notifica al adaptador que los datos han cambiado y debe refrescar la vista
+        Log.e("la lista", String.valueOf(nuevosRestaurantes.size()));
+        Log.e("original", String.valueOf(listaOriginal.size()));
+        Log.e("restaurantes", String.valueOf(restaurantes.size()));
+
+        // Notifica al adaptador que los datos han cambiado
+        notifyDataSetChanged();
+    }
+
+    public void restaurarListaOriginal() {
+        restaurantes.clear();
+        restaurantes.addAll(listaOriginal);
+        notifyDataSetChanged();
     }
 
     //HECHO
@@ -62,22 +84,23 @@ public class RestauranteAdapter extends RecyclerView.Adapter<RestauranteAdapter.
         return new RestauranteViewHolder(view);
     }
 
-    public ArrayList<Restaurante> filtrado(String txtBuscar){
-        ArrayList<Restaurante> restaurantesFiltrados = new ArrayList<>();
-        int longitud = txtBuscar.length();
-        if(longitud==0){
-            Log.e("resultado","chaoooo");
-            restaurantes.clear();
-            restaurantes.addAll(listaOriginal);
-        }else{
-            Log.e("resultado","holaaaa");
-            List<Restaurante> collecion = restaurantes.stream().filter(i -> i.getNombre().toLowerCase().contains(txtBuscar.toLowerCase())).collect(Collectors.toList());
-            restaurantes.clear();
-            restaurantes.addAll(collecion);
-            restaurantesFiltrados.addAll(collecion);
+    public ArrayList<Restaurante> filtrado(String texto){
+        if (texto == null || texto.isEmpty()) {
+            restaurarListaOriginal();
+            return listaOriginal;
         }
+
+        List<Restaurante> filtrados = new ArrayList<>();
+        for (Restaurante restaurante : listaOriginal) {
+            if (restaurante.getNombre().toLowerCase().contains(texto.toLowerCase())) {
+                filtrados.add(restaurante);
+            }
+        }
+
+        restaurantes.clear();
+        restaurantes.addAll(filtrados);
         notifyDataSetChanged();
-        return restaurantesFiltrados;
+        return (ArrayList<Restaurante>) filtrados;
     }
 
     @Override
