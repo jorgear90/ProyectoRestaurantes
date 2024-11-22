@@ -79,23 +79,22 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 boolean isValid = false;
+                String dbName = null;
 
                 for (DataSnapshot userSnapshot : snapshot.getChildren()) {
                     String dbEmail = userSnapshot.child("email").getValue(String.class);
                     String dbPassword = userSnapshot.child("password").getValue(String.class);
-
                     if (dbEmail != null && dbPassword != null && dbEmail.equals(email) && dbPassword.equals(password)) {
                         isValid = true;
+                        dbName = userSnapshot.child("name").getValue(String.class);
                         break;
                     }
                 }
 
                 if (isValid) {
                     guardarUserEmail(email);
-                    Toast.makeText(LoginActivity.this, "Inicio de sesión exitoso", Toast.LENGTH_SHORT).show();
-
-                    // Redirigir a Principal.java después de un inicio de sesión exitoso
                     Intent intent = new Intent(LoginActivity.this, Principal.class);
+                    intent.putExtra("userName", dbName);
                     intent.putExtra("userEmail", email);
                     startActivity(intent);
                     finish();
@@ -140,6 +139,8 @@ public class LoginActivity extends AppCompatActivity {
         SharedPreferences sharedPreferences = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
         return sharedPreferences.getString(KEY_USER_EMAIL, null);
     }
+
+
 }
 
 
