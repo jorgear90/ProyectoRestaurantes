@@ -12,6 +12,18 @@
         android:text="Nombre del Restaurante"
         android:textSize="18sp" />
 
+    <TextView
+        android:id="@+id/viewDireccion"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Direccion" />
+
+    <TextView
+        android:id="@+id/viewCiudad"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Ciudad" />
+
     <!-- Aquí puedes agregar más información del restaurante si lo deseas -->
 
 </LinearLayout>

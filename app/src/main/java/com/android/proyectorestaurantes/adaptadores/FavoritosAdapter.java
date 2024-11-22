@@ -40,6 +40,8 @@ public class FavoritosAdapter extends RecyclerView.Adapter<FavoritosAdapter.Favo
     public void onBindViewHolder(@NonNull FavoritosViewHolder holder, int position) {
         Favoritos favorito = listaFavoritos.get(position);
         holder.viewNombre.setText(favorito.getNombreRetaurante());
+        holder.viewDireccion.setText(favorito.getDireccion());
+        holder.viewCiudad.setText(favorito.getCiudad());
 
         // Configura el clic en el elemento solo si el listener está presente
         holder.itemView.setOnClickListener(v -> {
@@ -60,10 +62,14 @@ public class FavoritosAdapter extends RecyclerView.Adapter<FavoritosAdapter.Favo
 
     public static class FavoritosViewHolder extends RecyclerView.ViewHolder {
         TextView viewNombre;
+        TextView viewDireccion;
+        TextView viewCiudad;
 
         public FavoritosViewHolder(@NonNull View itemView) {
             super(itemView);
             viewNombre = itemView.findViewById(R.id.viewNombre);
+            viewDireccion = itemView.findViewById(R.id.viewDireccion);
+            viewCiudad = itemView.findViewById(R.id.viewCiudad);
         }
     }
 }

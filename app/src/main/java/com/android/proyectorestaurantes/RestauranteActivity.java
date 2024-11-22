@@ -1,5 +1,7 @@
 package com.android.proyectorestaurantes;
 
+import static com.android.proyectorestaurantes.bd.BaseDatos.opinionesList;
+
 import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.SharedPreferences;
@@ -25,7 +27,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.android.proyectorestaurantes.adaptadores.OpinionesAdapter;
 import com.android.proyectorestaurantes.adaptadores.PlatilloAdapter;
 import com.android.proyectorestaurantes.bd.BaseDatos;
-import com.android.proyectorestaurantes.entidades.Favoritos;
 import com.android.proyectorestaurantes.entidades.Opiniones;
 import com.android.proyectorestaurantes.entidades.Platillo;
 import com.android.proyectorestaurantes.entidades.Restaurante;
@@ -135,7 +136,7 @@ public class RestauranteActivity extends AppCompatActivity {
         // Mostrar datos del restaurante
         if (restaurante != null) {
             tvNombreRestaurante.setText(restaurante.getNombre());
-            tvNotaRestaurante.setText("Nota: " + restaurante.getPromedio());
+            //tvNotaRestaurante.setText("Nota: " + promedio);
             tvDireccionRestaurante.setText(restaurante.getDireccion());
 
             btnHorario.setOnClickListener(v -> mostrarHorario(restaurante.getHoraApertura(), restaurante.getHoraCierre()));
@@ -260,7 +261,7 @@ public class RestauranteActivity extends AppCompatActivity {
 
     private ArrayList<Opiniones> obtenerOpinionesPorId(String idRes) {
         ArrayList<Opiniones> opinionesFiltradas = new ArrayList<>();
-        for (Opiniones opinion : BaseDatos.opinionesList) {
+        for (Opiniones opinion : opinionesList) {
             if (opinion.getIdRestaurante().equals(idRes) && !opinionesFiltradas.contains(opinion)) {
                 opinionesFiltradas.add(opinion);
             }
@@ -301,6 +302,7 @@ public class RestauranteActivity extends AppCompatActivity {
         String ir = restaurante.getId();
         String nr = restaurante.getNombre();
         String d = restaurante.getDireccion();
+        String c = restaurante.getCiudad();
         String ha = restaurante.getHoraApertura();
         String hc = restaurante.getHoraCierre();
         double p = restaurante.getPromedio();
@@ -311,6 +313,7 @@ public class RestauranteActivity extends AppCompatActivity {
         registro.put("idRestaurante", ir);
         registro.put("nombreRestaurante", nr);
         registro.put("direccion", d);
+        registro.put("ciudad",c);
         registro.put("horaApertura", ha);
         registro.put("horaCierre", hc);
         registro.put("promedio", p);
@@ -421,8 +424,24 @@ public class RestauranteActivity extends AppCompatActivity {
                     opinionesFiltradas.addAll(nuevasOpiniones);
                     runOnUiThread(() -> opinionesAdapter.notifyDataSetChanged());
                 }
+
+                float promedio= 0f;
+                Integer contador =0;
+                float suma = 0;
+                for(Opiniones nota: opinionesFiltradas){
+                    suma = nota.getPuntuacion() + suma;
+                    contador=contador+1;
+                    Log.e("resultadoS", String.valueOf(suma));
+                    Log.e("resultadoC", String.valueOf(contador));
+                }
+                //Promedio
+                promedio = suma/contador;
+
+                tvNotaRestaurante.setText("Nota " + promedio);
+
                 // Repite el chequeo cada 2 segundos
                 handler.postDelayed(this, 2000);
+
             }
         };
         handler.post(runnable);

@@ -17,6 +17,10 @@ public class Opiniones {
         this.fecha = fecha;
     }
 
+    // Constructor vacío requerido por Firebase
+    public Opiniones() {
+    }
+
     public float getPuntuacion() {
         return puntuacion;
     }

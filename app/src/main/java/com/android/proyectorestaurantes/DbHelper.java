@@ -24,6 +24,7 @@ public class DbHelper extends SQLiteOpenHelper {
                 "idRestaurante INTEGER NOT NULL, " +
                 "nombreRestaurante TEXT NOT NULL, " +
                 "direccion TEXT NOT NULL, " +
+                "ciudad TEXT NOT NULL, " +
                 "horaApertura TEXT NOT NULL, " +
                 "horaCierre TEXT NOT NULL, " +
                 "promedio INTEGER NOT NULL)");
