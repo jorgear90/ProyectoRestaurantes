@@ -16,6 +16,7 @@ import android.os.Handler;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -64,6 +65,7 @@ public class RestauranteActivity extends AppCompatActivity {
     private boolean esFavorito;
     private DbHelper dbHelper;
     private SQLiteDatabase db;
+    private ImageView imagen;
 
     @SuppressLint({"SetTextI18n", "MissingInflatedId"})
     @Override
@@ -117,6 +119,8 @@ public class RestauranteActivity extends AppCompatActivity {
         etComentario = findViewById(R.id.etComentario);
         btnHorario = findViewById(R.id.btnHorario);
         btnServicios = findViewById(R.id.btnServicios);
+        imagen = findViewById(R.id.imgRestaurante1);
+
 
         // Configuración del RecyclerView para platillos
         List<Platillo> platillosList = restaurante.getPlatillos();
@@ -136,8 +140,24 @@ public class RestauranteActivity extends AppCompatActivity {
         // Mostrar datos del restaurante
         if (restaurante != null) {
             tvNombreRestaurante.setText(restaurante.getNombre());
+            if(restaurante.getNombre().equals("Asumaki sucursal Centro")){
+                imagen.setImageResource(R.mipmap.asumaki);
+            } else if(restaurante.getNombre().equals("Oriente centro")){
+                imagen.setImageResource(R.mipmap.orientecentro);
+            }else if(restaurante.getNombre().equals("La parrilla de Don Humberto")){
+                imagen.setImageResource(R.mipmap.parrillahumberto);
+            }else if(restaurante.getNombre().equals("Restaurant Hoi Kong")){
+                imagen.setImageResource(R.mipmap.hoikong);
+            }else if(restaurante.getNombre().equals("Mar Adentro")){
+                imagen.setImageResource(R.mipmap.maradentro);
+            }else if(restaurante.getNombre().equals("Pizzeria El Retorno")){
+                imagen.setImageResource(R.mipmap.elretorno);
+            }else if(restaurante.getNombre().equals("Casona Gourmet")){
+                imagen.setImageResource(R.mipmap.casonagourmet);
+            }
+
             //tvNotaRestaurante.setText("Nota: " + promedio);
-            tvDireccionRestaurante.setText(restaurante.getDireccion());
+            tvDireccionRestaurante.setText("Dirección: " + restaurante.getDireccion());
 
             btnHorario.setOnClickListener(v -> mostrarHorario(restaurante.getHoraApertura(), restaurante.getHoraCierre()));
             btnServicios.setOnClickListener(v -> mostrarServicios(restaurante.getServicios())); // Configuración del botón de servicios

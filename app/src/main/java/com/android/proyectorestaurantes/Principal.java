@@ -62,7 +62,7 @@ public class Principal extends AppCompatActivity implements NavigationView.OnNav
 
         // Configuración del AppBar con los fragmentos en el Navigation Drawer
         mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_principal, R.id.nav_perfil, R.id.nav_mapa, R.id.nav_ajustes, R.id.nav_favoritos)
+                R.id.nav_principal, R.id.nav_perfil, R.id.nav_mapa, R.id.nav_favoritos)
                 .setOpenableLayout(drawer)
                 .build();
 
